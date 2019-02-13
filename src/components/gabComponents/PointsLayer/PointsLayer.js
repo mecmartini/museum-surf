@@ -1,8 +1,11 @@
-import React, { Component, Fragment } from 'react';
-import { Marker, Popup } from 'react-leaflet';
+import React, { Component } from 'react';
+import { GeoJSON, Popup } from 'react-leaflet';
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import MapPinIcon from '../MapMarkers';
+import L from 'leaflet';
+
+import 'leaflet/dist/leaflet.css';
 
 class PointsLayer extends Component {
   constructor(props) {
@@ -10,53 +13,24 @@ class PointsLayer extends Component {
 
     this.state = {
       data: null,
-      markers: [],
-      labels: [],
+      image: null,
+      location: null,
     }
   }
 
   onEachFeature = (feature, layer) => {
-    const { regionLayerClick } = this.props;
-    const { markers } = this.state;
-    const popLegend = feature.properties.legend_values_pop;
-    const constCapita = feature.properties.e_cost_capit;
-    const pop = feature.properties.pop;
-
-    const bounds = layer.getBounds();
-    const center = bounds.getCenter();
-
-    const markerCoord = {
-      lat: feature.properties.marker_lat,
-      lng: feature.properties.marker_long,
-    };
-    const markerData = {
-      coord: markerCoord,
-      popLegend: popLegend,
-      pop: Math.trunc(pop),
-      costCapita: Math.trunc(constCapita),
-      name: feature.properties.name,
-      center: center,
-    }
-    markers.push(markerData);
-
     layer.on({
-        click: regionLayerClick,
-        mouseover: this.handleMouseover,
-        mouseout: this.handleMouseout,
+        click: this.handleClick,
     });
-
-    this.setState({ markers: markers });
   }
 
-  getStyle = (feature) =>  {
-    const style = {
-      color: "#FFFFFF",
-      fillColor: "#FFFFFF",
-      opacity: 1,
-      fillOpacity: 1,
-      weight: 1,
-    };
-    return style;
+  handleClick = (e) => {
+    const featureProps = e.sourceTarget.feature.properties;
+    console.log(featureProps)
+    this.setState({
+      image: featureProps.image,
+      location: featureProps.location,
+    })
   }
 
   componentDidMount() {
@@ -77,7 +51,6 @@ class PointsLayer extends Component {
         const decodedData = geobuf.decode(pbfData);
 
         this.setState({ data: decodedData });
-        this.buildMarkers(decodedData);
       })
       .catch(function (error) {
         console.log(error);
@@ -85,15 +58,11 @@ class PointsLayer extends Component {
       });
   }
 
-  buildMarkers = (points) => {
-    const markers = points.features.map((point) => pointMarker(point))
-    this.setState({ markers })
-  }
-
   render() {
     const {
       data,
-      markers
+      image,
+      location,
     } = this.state;
 
     const imgStyle = {
@@ -104,25 +73,30 @@ class PointsLayer extends Component {
       minWidth: "250px",
     }
 
-    if (data && markers) {
+    const style = {
+      color: "#FFFFFF",
+      fillColor: "#FFFFFF",
+      opacity: 1,
+      fillOpacity: 1,
+      weight: 10,
+      width: "20px",
+      height: "20px",
+    };
+
+    if (data) {
       return (
-        <Fragment>
-
-          {markers && markers.map((item, key) =>
-            <Marker
-              //interactive={false}
-              icon={MapPinIcon}
-              key={key}
-              position={item.coord}
-            >
-              <Popup>
-                <h5 style={h5Style}>{item.location}</h5>
-                <img style={imgStyle} src={item.image} alt={item.location} />
-              </Popup>
-            </Marker>
-          )}
-
-        </Fragment>
+        <GeoJSON
+          ref={"data"}
+          data={data.features}
+          style={style}
+          onEachFeature={this.onEachFeature}
+          pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
+        >
+          <Popup>
+            <h5 style={h5Style}>{location}</h5>
+            <img style={imgStyle} src={image} alt={location} />
+          </Popup>
+        </GeoJSON>
       );
     }
 
@@ -130,18 +104,8 @@ class PointsLayer extends Component {
   }
 }
 
-const pointMarker = (point) => {
-  const markerCoord = {
-    lat: point.geometry.coordinates[1],
-    lng: point.geometry.coordinates[0],
-  };
-  const markerData = {
-    coord: markerCoord,
-    image: point.properties.image,
-    location: point.properties.location,
-  }
-
-  return markerData;
+const pointDraw = (feature, latlng) => {
+  return L.marker(latlng, { icon: MapPinIcon });
 }
 
 export default PointsLayer;
