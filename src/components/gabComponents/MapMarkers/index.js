@@ -1,3 +1,7 @@
 import MapPinIcon from './MapPinIcon'
+import MapPinIconMuseum from './MapPinIconMuseum'
 
-export default MapPinIcon
+export  {
+  MapPinIcon,
+  MapPinIconMuseum
+ }

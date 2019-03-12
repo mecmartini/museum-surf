@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { GeoJSON, Popup } from 'react-leaflet';
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
-import MapPinIcon from '../MapMarkers';
+import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
@@ -114,7 +114,9 @@ class PointsLayer extends Component {
 }
 
 const pointDraw = (feature, latlng) => {
-  return L.marker(latlng, { icon: MapPinIcon });
+  const museumValue = feature.properties.museum
+  const pinIcon = museumValue === 1 ? MapPinIconMuseum : MapPinIcon
+  return L.marker(latlng, { icon: pinIcon });
 }
 
 export default PointsLayer;
