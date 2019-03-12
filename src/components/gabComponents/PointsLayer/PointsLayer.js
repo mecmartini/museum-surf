@@ -33,6 +33,13 @@ class PointsLayer extends Component {
     })
   }
 
+  handlePopupClose = (e) => {
+    this.setState({
+      image: null,
+      location: null,
+    })
+  }
+
   componentDidMount() {
     const filePath = './assets/map.pbf';
 
@@ -49,6 +56,8 @@ class PointsLayer extends Component {
         const data = new Uint8Array(buffer);
         const pbfData = new Pbf(data);
         const decodedData = geobuf.decode(pbfData);
+        console.log('MAP DATA')
+        console.log(decodedData)
 
         this.setState({ data: decodedData });
       })
@@ -92,7 +101,7 @@ class PointsLayer extends Component {
           onEachFeature={this.onEachFeature}
           pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
         >
-          <Popup>
+          <Popup onClose={this.handlePopupClose}>
             <h5 style={h5Style}>{location}</h5>
             <img style={imgStyle} src={image} alt={location} />
           </Popup>
