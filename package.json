@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@skyeer/react-leaflet-custom-control": "0.0.6",
     "geobuf": "^3.0.1",
     "leaflet": "^1.4.0",
     "pbf": "^3.1.0",
