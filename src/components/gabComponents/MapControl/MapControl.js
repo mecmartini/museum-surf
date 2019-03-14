@@ -13,20 +13,22 @@ class MapControl extends Component {
   render() {
     const {
       toggleShowMuseum,
-      toggleShowNotMuseum
+      toggleShowNotMuseum,
+      museumVisible,
+      notMuseumVisible
     } = this.props
 
     return(
       <Control
         position="topright">
         <StyledWrapper>
-          <p>Hola mundo</p>
               <button
                 onClick={toggleShowMuseum}
-              >Show Museum pics</button>
+              >{museumVisible ? 'Hide' : 'Show'} Museum pics</button>
+              <br />
               <button
                 onClick={toggleShowNotMuseum}
-              >Show not Museum pics</button>
+              >{notMuseumVisible ? 'Hide' : 'Show'} not Museum pics</button>
         </StyledWrapper>
       </Control>
     )
