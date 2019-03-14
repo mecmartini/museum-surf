@@ -17,7 +17,7 @@ class PointsLayer extends Component {
       image: null,
       location: null,
       showMuseumPics: true,
-      showNotMuseumPics: false,
+      showNotMuseumPics: true,
 
     }
   }
@@ -112,13 +112,12 @@ class PointsLayer extends Component {
     console.log(this.state)
 
     if (data) {
+      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}`
       return (
         <GeoJSON
-          ref={"data"}
+          key={layerKey}
           data={data}
           style={style}
-          showMuseumPics={this.state.showMuseumPics}
-          showNotMuseumPics={this.state.showNotMuseumPics}
           onEachFeature={this.onEachFeature}
           filter={feature => (filterLayers(feature, showMuseumPics, showNotMuseumPics)
           )}
@@ -126,7 +125,9 @@ class PointsLayer extends Component {
         >
           <MapControl
             toggleShowMuseum={this.toggleShowMuseum}
-            toggleShowNotMuseum={this.toggleShowNotMuseum}/>
+            toggleShowNotMuseum={this.toggleShowNotMuseum}
+            museumVisible={showMuseumPics}
+            notMuseumVisible={showNotMuseumPics}/>
           <Popup onClose={this.handlePopupClose}>
             <h5 style={h5Style}>{location}</h5>
             <img style={imgStyle} src={image} alt={location} />
@@ -139,9 +140,13 @@ class PointsLayer extends Component {
   }
 }
 
-const filterLayers =
-(feature, showMuseumPics, showNotMuseumPics) => {
-  {console.log(`${showMuseumPics} + ${showNotMuseumPics}`)}
+const filterLayers = (feature, showMuseumPics, showNotMuseumPics) => {
+  const isMuseum = feature.properties.museum
+  return (
+    ((showMuseumPics === false && showNotMuseumPics === false) ? false :
+    (showMuseumPics === true && isMuseum === 1 ? true : false) ? true :
+    (showNotMuseumPics === true && isMuseum === 0 ? true : false) ? true : false)
+  )
 }
 
 const pointDraw = (feature, latlng) => {
