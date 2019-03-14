@@ -3,6 +3,7 @@ import { GeoJSON, Popup } from 'react-leaflet';
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
+import MapControl from '../MapControl'
 import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
@@ -15,8 +16,22 @@ class PointsLayer extends Component {
       data: null,
       image: null,
       location: null,
+      showMuseumPics: true,
+      showNotMuseumPics: false,
+
     }
   }
+
+  toggleShowMuseum = (e) => {
+    const { showMuseumPics } = this.state
+    this.setState({ showMuseumPics: !showMuseumPics})
+  }
+
+  toggleShowNotMuseum = (e) => {
+    const { showNotMuseumPics } = this.state
+    this.setState({ showNotMuseumPics: !showNotMuseumPics})
+  }
+
 
   onEachFeature = (feature, layer) => {
     layer.on({
@@ -72,6 +87,8 @@ class PointsLayer extends Component {
       data,
       image,
       location,
+      showMuseumPics,
+      showNotMuseumPics
     } = this.state;
 
     const imgStyle = {
@@ -92,15 +109,24 @@ class PointsLayer extends Component {
       height: "20px",
     };
 
+    console.log(this.state)
+
     if (data) {
       return (
         <GeoJSON
           ref={"data"}
-          data={data.features}
+          data={data}
           style={style}
+          showMuseumPics={this.state.showMuseumPics}
+          showNotMuseumPics={this.state.showNotMuseumPics}
           onEachFeature={this.onEachFeature}
+          filter={feature => (filterLayers(feature, showMuseumPics, showNotMuseumPics)
+          )}
           pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
         >
+          <MapControl
+            toggleShowMuseum={this.toggleShowMuseum}
+            toggleShowNotMuseum={this.toggleShowNotMuseum}/>
           <Popup onClose={this.handlePopupClose}>
             <h5 style={h5Style}>{location}</h5>
             <img style={imgStyle} src={image} alt={location} />
@@ -111,6 +137,11 @@ class PointsLayer extends Component {
 
     return (null);
   }
+}
+
+const filterLayers =
+(feature, showMuseumPics, showNotMuseumPics) => {
+  {console.log(`${showMuseumPics} + ${showNotMuseumPics}`)}
 }
 
 const pointDraw = (feature, latlng) => {
