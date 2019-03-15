@@ -141,12 +141,24 @@ class PointsLayer extends Component {
 }
 
 const filterLayers = (feature, showMuseumPics, showNotMuseumPics) => {
-  const isMuseum = feature.properties.museum
-  return (
-    ((showMuseumPics === false && showNotMuseumPics === false) ? false :
-    (showMuseumPics === true && isMuseum === 1 ? true : false) ? true :
-    (showNotMuseumPics === true && isMuseum === 0 ? true : false) ? true : false)
-  )
+  if (showMuseumPics === false && showNotMuseumPics === false) {
+    return false;
+  }
+
+  if (showMuseumPics === true && showNotMuseumPics === true) {
+    return true;
+  }
+
+  const isMuseum = feature.properties.museum;
+  if (showMuseumPics === true && isMuseum === 1) {
+    return true;
+  }
+
+  if (showNotMuseumPics === true && isMuseum === 0) {
+    return true;
+  }
+
+  return false;
 }
 
 const pointDraw = (feature, latlng) => {
