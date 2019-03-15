@@ -2,7 +2,6 @@ import React, { createRef, Component } from 'react';
 import { Map } from 'react-leaflet';
 import styled from "styled-components";
 import BaseMap from '../BaseMap';
-import CircleLayer from '../CircleLayer';
 import PointsLayer from '../gabComponents/PointsLayer';
 
 import 'leaflet/dist/leaflet.css';
