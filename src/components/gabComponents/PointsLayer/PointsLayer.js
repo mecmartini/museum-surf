@@ -22,6 +22,8 @@ class PointsLayer extends Component {
       showNotMuseumPics: true,
       total: 0,
       count: 0,
+      totalIsMuseum: null,
+      totalIsNotMuseum: null,
     }
   }
 
@@ -75,6 +77,9 @@ class PointsLayer extends Component {
         const data = new Uint8Array(buffer);
         const pbfData = new Pbf(data);
         const decodedData = geobuf.decode(pbfData);
+
+        const totalIsMuseum = decodedData.features.reduce()
+        const totalIsNotMuseum = decodedData.features.reduce()
 
         this.setState({ data: decodedData, total: decodedData.features.length, count: decodedData.features.length });
       })
