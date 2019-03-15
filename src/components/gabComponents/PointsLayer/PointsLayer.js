@@ -9,6 +9,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 class PointsLayer extends Component {
+  count2 = 0;
+
   constructor(props) {
     super(props);
 
@@ -18,22 +20,25 @@ class PointsLayer extends Component {
       location: null,
       showMuseumPics: true,
       showNotMuseumPics: true,
-
+      total: 0,
+      count: 0,
     }
   }
 
   toggleShowMuseum = (e) => {
     const { showMuseumPics } = this.state
-    this.setState({ showMuseumPics: !showMuseumPics})
+    this.count2 = 0;
+    this.setState({ showMuseumPics: !showMuseumPics, count: 0 })
   }
 
   toggleShowNotMuseum = (e) => {
     const { showNotMuseumPics } = this.state
-    this.setState({ showNotMuseumPics: !showNotMuseumPics})
+    this.count2 = 0;
+    this.setState({ showNotMuseumPics: !showNotMuseumPics, count: 0 })
   }
 
-
   onEachFeature = (feature, layer) => {
+    this.count2++;
     layer.on({
         click: this.handleClick,
     });
@@ -41,7 +46,6 @@ class PointsLayer extends Component {
 
   handleClick = (e) => {
     const featureProps = e.sourceTarget.feature.properties;
-    console.log(featureProps)
     this.setState({
       image: featureProps.image,
       location: featureProps.location,
@@ -71,15 +75,19 @@ class PointsLayer extends Component {
         const data = new Uint8Array(buffer);
         const pbfData = new Pbf(data);
         const decodedData = geobuf.decode(pbfData);
-        console.log('MAP DATA')
-        console.log(decodedData)
 
-        this.setState({ data: decodedData });
+        this.setState({ data: decodedData, total: decodedData.features.length, count: decodedData.features.length });
       })
       .catch(function (error) {
         console.log(error);
         return null
       });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.count !== this.count2) {
+      this.setState({ count: this.count2 });
+    }
   }
 
   render() {
@@ -109,9 +117,11 @@ class PointsLayer extends Component {
       height: "20px",
     };
 
-    console.log(this.state)
-
     if (data) {
+      console.log('TOTAL')
+      console.log(this.state.total)
+      console.log('COUNT')
+      console.log(this.state.count)
       const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}`
       return (
         <GeoJSON
