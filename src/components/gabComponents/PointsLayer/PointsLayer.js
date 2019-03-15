@@ -3,7 +3,7 @@ import { GeoJSON, Popup } from 'react-leaflet';
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
-import MapControl from '../MapControl'
+import LayersControl from '../LayersControl'
 import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
@@ -175,7 +175,7 @@ class PointsLayer extends Component {
           )}
           pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
         >
-          <MapControl
+          <LayersControl
             toggleShowMuseum={this.toggleShowMuseum}
             toggleShowNotMuseum={this.toggleShowNotMuseum}
             museumVisible={showMuseumPics}
