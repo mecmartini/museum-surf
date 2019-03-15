@@ -4,6 +4,7 @@ import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
+import InfoControl from '../InfoControl'
 import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
@@ -138,7 +139,13 @@ class PointsLayer extends Component {
       image,
       location,
       showMuseumPics,
-      showNotMuseumPics
+      showNotMuseumPics,
+      total,
+      count,
+      totalIsMuseum,
+      totalIsNotMuseum,
+      percentageMuseum,
+      percentageNotMuseum,
     } = this.state;
 
     const imgStyle = {
@@ -180,6 +187,13 @@ class PointsLayer extends Component {
             toggleShowNotMuseum={this.toggleShowNotMuseum}
             museumVisible={showMuseumPics}
             notMuseumVisible={showNotMuseumPics}/>
+          <InfoControl
+            total={total}
+            count={count}
+            totalIsMuseum={totalIsMuseum}
+            totalIsNotMuseum={totalIsNotMuseum}
+            percentageMuseum={percentageMuseum}
+            percentageNotMuseum={percentageNotMuseum}/>
           <Popup onClose={this.handlePopupClose}>
             <h5 style={h5Style}>{location}</h5>
             <img style={imgStyle} src={image} alt={location} />
