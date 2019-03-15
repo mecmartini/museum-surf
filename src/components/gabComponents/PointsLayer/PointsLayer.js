@@ -9,7 +9,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 class PointsLayer extends Component {
-  count2 = 0;
+  countVisible = 0;
 
   constructor(props) {
     super(props);
@@ -22,25 +22,27 @@ class PointsLayer extends Component {
       showNotMuseumPics: true,
       total: 0,
       count: 0,
-      totalIsMuseum: null,
-      totalIsNotMuseum: null,
+      totalIsMuseum: 0,
+      totalIsNotMuseum: 0,
+      percentageMuseum: null,
+      percentageNotMuseum: null
     }
   }
 
   toggleShowMuseum = (e) => {
     const { showMuseumPics } = this.state
-    this.count2 = 0;
+    this.countVisible = 0;
     this.setState({ showMuseumPics: !showMuseumPics, count: 0 })
   }
 
   toggleShowNotMuseum = (e) => {
     const { showNotMuseumPics } = this.state
-    this.count2 = 0;
+    this.countVisible = 0;
     this.setState({ showNotMuseumPics: !showNotMuseumPics, count: 0 })
   }
 
   onEachFeature = (feature, layer) => {
-    this.count2++;
+    this.countVisible++;
     layer.on({
         click: this.handleClick,
     });
@@ -78,10 +80,45 @@ class PointsLayer extends Component {
         const pbfData = new Pbf(data);
         const decodedData = geobuf.decode(pbfData);
 
-        const totalIsMuseum = decodedData.features.reduce()
-        const totalIsNotMuseum = decodedData.features.reduce()
+        const totalIsMuseum = decodedData.features.reduce(
+          (tot, feat) => {
+            if(typeof tot === 'object') {
+                tot = (tot.properties.museum === 1 ? 1 : 0)
+                if(feat.properties.museum === 1){
+                  tot++
+                }
+              } else {
+                tot = (feat.properties.museum === 1 ? tot + 1 : tot)
+              }
+              return tot
+            }
+          )
+        const totalIsNotMuseum = decodedData.features.reduce(
+          (tot, feat) => {
+            if(typeof tot === 'object') {
+                tot = (tot.properties.museum === 0 ? 1 : 0)
+                if(feat.properties.museum === 0){
+                  tot++
+                }
+              } else {
+                tot = (feat.properties.museum === 0 ? tot + 1 : tot)
+              }
+              return tot
+            }
+          )
+          const totalPoints = decodedData.features.length;
+          const percentageMuseum = totalIsMuseum * 100 / totalPoints
+          const percentageNotMuseum = totalIsNotMuseum * 100 / totalPoints
 
-        this.setState({ data: decodedData, total: decodedData.features.length, count: decodedData.features.length });
+        this.setState({
+          data: decodedData,
+          total: totalPoints,
+          count: totalPoints,
+          totalIsMuseum: totalIsMuseum,
+          totalIsNotMuseum: totalIsNotMuseum,
+          percentageMuseum: percentageMuseum.toFixed(2),
+          percentageNotMuseum: percentageNotMuseum.toFixed(2)
+        })
       })
       .catch(function (error) {
         console.log(error);
@@ -90,8 +127,8 @@ class PointsLayer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.count !== this.count2) {
-      this.setState({ count: this.count2 });
+    if (this.state.count !== this.countVisible) {
+      this.setState({ count: this.countVisible });
     }
   }
 
