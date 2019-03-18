@@ -53,7 +53,6 @@ class PointsLayer extends Component {
 
   handleClick = (e) => {
     const featureProps = e.sourceTarget.feature.properties;
-    console.log(featureProps)
     this.setState({
       image: featureProps.image,
       location: featureProps.location,
@@ -176,12 +175,6 @@ class PointsLayer extends Component {
     };
 
     if (data) {
-      console.log('TOTAL')
-      console.log(this.state.total)
-      console.log('COUNT')
-      console.log(this.state.count)
-      console.log('HASHTAGS')
-      console.log(hashtag)
       const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}`
       return (
         <GeoJSON
