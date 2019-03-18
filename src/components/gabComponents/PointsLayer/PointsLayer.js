@@ -18,6 +18,8 @@ class PointsLayer extends Component {
       data: null,
       image: null,
       location: null,
+      hashtag: null,
+      country: null,
       showMuseumPics: true,
       showNotMuseumPics: true,
       total: 0,
@@ -48,9 +50,12 @@ class PointsLayer extends Component {
 
   handleClick = (e) => {
     const featureProps = e.sourceTarget.feature.properties;
+    console.log(featureProps)
     this.setState({
       image: featureProps.image,
       location: featureProps.location,
+      hashtag: featureProps.hashtags,
+      country: featureProps.country,
     })
   }
 
@@ -58,6 +63,8 @@ class PointsLayer extends Component {
     this.setState({
       image: null,
       location: null,
+      hashtag: null,
+      country: null,
     })
   }
 
@@ -78,9 +85,6 @@ class PointsLayer extends Component {
         const pbfData = new Pbf(data);
         const decodedData = geobuf.decode(pbfData);
 
-        const totalIsMuseum = decodedData.features.reduce()
-        const totalIsNotMuseum = decodedData.features.reduce()
-
         this.setState({ data: decodedData, total: decodedData.features.length, count: decodedData.features.length });
       })
       .catch(function (error) {
@@ -100,6 +104,8 @@ class PointsLayer extends Component {
       data,
       image,
       location,
+      hashtag,
+      country,
       showMuseumPics,
       showNotMuseumPics
     } = this.state;
@@ -127,6 +133,8 @@ class PointsLayer extends Component {
       console.log(this.state.total)
       console.log('COUNT')
       console.log(this.state.count)
+      console.log('HASHTAGS')
+      console.log(hashtag)
       const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}`
       return (
         <GeoJSON
@@ -146,6 +154,12 @@ class PointsLayer extends Component {
           <Popup onClose={this.handlePopupClose}>
             <h5 style={h5Style}>{location}</h5>
             <img style={imgStyle} src={image} alt={location} />
+            {hashtag &&
+              <ul>
+                {hashtag.map((item) => <li>{item}</li>)}
+              </ul>
+            }
+            <b>Country:</b><span>{country}</span>
           </Popup>
         </GeoJSON>
       );
