@@ -8,7 +8,7 @@ const StyledWrapper = styled.div`
   padding: 10px;
 `
 
-class MapControl extends Component {
+class LayersControl extends Component {
 
   render() {
     const {
@@ -35,4 +35,4 @@ class MapControl extends Component {
   }
 }
 
-export default MapControl
+export default LayersControl
