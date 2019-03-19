@@ -5,12 +5,14 @@ import Pbf from 'pbf';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
 import InfoControl from '../InfoControl'
+import CategoriesControl from '../CategoriesControl'
 import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
 
 class PointsLayer extends Component {
   countVisible = 0;
+  categories = new Set();
 
   constructor(props) {
     super(props);
@@ -28,7 +30,9 @@ class PointsLayer extends Component {
       totalIsMuseum: 0,
       totalIsNotMuseum: 0,
       percentageMuseum: null,
-      percentageNotMuseum: null
+      percentageNotMuseum: null,
+      catLoaded: 0,
+      categories:['una', 'dos']
     }
   }
 
@@ -46,6 +50,9 @@ class PointsLayer extends Component {
 
   onEachFeature = (feature, layer) => {
     this.countVisible++;
+    this.categories.add(feature.properties.category);
+    console.log('onEachFeature');
+
     layer.on({
         click: this.handleClick,
     });
@@ -117,6 +124,11 @@ class PointsLayer extends Component {
           const percentageMuseum = totalIsMuseum * 100 / totalPoints
           const percentageNotMuseum = totalIsNotMuseum * 100 / totalPoints
 
+          const uniqueCategories = [...this.categories];
+          // this.setState({categories: uniqueCategories});
+
+          console.log([...this.categories])
+
         this.setState({
           data: decodedData,
           total: totalPoints,
@@ -124,8 +136,11 @@ class PointsLayer extends Component {
           totalIsMuseum: totalIsMuseum,
           totalIsNotMuseum: totalIsNotMuseum,
           percentageMuseum: percentageMuseum.toFixed(2),
-          percentageNotMuseum: percentageNotMuseum.toFixed(2)
+          percentageNotMuseum: percentageNotMuseum.toFixed(2),
+          categories: uniqueCategories,
         })
+        console.log('componentDidMount');
+        console.log(this.categories);
       })
       .catch(function (error) {
         console.log(error);
@@ -137,6 +152,12 @@ class PointsLayer extends Component {
     if (this.state.count !== this.countVisible) {
       this.setState({ count: this.countVisible });
     }
+    // if (this.state.categories !== prevState.categories && this.state.categories === []) {
+    // //Clean and generate the final array with unique Categories
+    // const uniqueCategories = [...new Set(this.categories)];
+    // this.setState({categories: uniqueCategories});
+    // }
+    console.log('componentDidUpdate');
   }
 
   render() {
@@ -154,6 +175,7 @@ class PointsLayer extends Component {
       totalIsNotMuseum,
       percentageMuseum,
       percentageNotMuseum,
+      categories
     } = this.state;
 
     const imgStyle = {
@@ -174,6 +196,7 @@ class PointsLayer extends Component {
       height: "20px",
     };
 
+    console.log(`categories from render: ${categories}`);
     if (data) {
       const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}`
       return (
@@ -198,6 +221,8 @@ class PointsLayer extends Component {
             totalIsNotMuseum={totalIsNotMuseum}
             percentageMuseum={percentageMuseum}
             percentageNotMuseum={percentageNotMuseum}/>
+          <CategoriesControl
+            categories={categories}/>
           <Popup onClose={this.handlePopupClose}>
             <h5 style={h5Style}>{location}</h5>
             <img style={imgStyle} src={image} alt={location} />
