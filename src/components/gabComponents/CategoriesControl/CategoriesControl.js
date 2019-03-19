@@ -14,14 +14,12 @@ class CategoriesControl extends Component {
     const {
       categories,
     } = this.props
-    console.log(`categories from control: ${categories}`);
 
     return(
       <Control
         position="topright">
         <StyledWrapper>
               <h2>Categories:</h2>
-              <br />
               <ul>
                 {categories.map((item, k) => (
                   <li key={k}>{item}</li>

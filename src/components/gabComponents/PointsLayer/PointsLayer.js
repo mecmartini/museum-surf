@@ -31,8 +31,8 @@ class PointsLayer extends Component {
       totalIsNotMuseum: 0,
       percentageMuseum: null,
       percentageNotMuseum: null,
-      catLoaded: 0,
-      categories:['una', 'dos']
+      catLoaded: false,
+      categories: [],
     }
   }
 
@@ -120,14 +120,10 @@ class PointsLayer extends Component {
               return tot
             }
           )
-          const totalPoints = decodedData.features.length;
-          const percentageMuseum = totalIsMuseum * 100 / totalPoints
-          const percentageNotMuseum = totalIsNotMuseum * 100 / totalPoints
 
-          const uniqueCategories = [...this.categories];
-          // this.setState({categories: uniqueCategories});
-
-          console.log([...this.categories])
+        const totalPoints = decodedData.features.length;
+        const percentageMuseum = totalIsMuseum * 100 / totalPoints
+        const percentageNotMuseum = totalIsNotMuseum * 100 / totalPoints
 
         this.setState({
           data: decodedData,
@@ -137,10 +133,7 @@ class PointsLayer extends Component {
           totalIsNotMuseum: totalIsNotMuseum,
           percentageMuseum: percentageMuseum.toFixed(2),
           percentageNotMuseum: percentageNotMuseum.toFixed(2),
-          categories: uniqueCategories,
         })
-        console.log('componentDidMount');
-        console.log(this.categories);
       })
       .catch(function (error) {
         console.log(error);
@@ -152,12 +145,13 @@ class PointsLayer extends Component {
     if (this.state.count !== this.countVisible) {
       this.setState({ count: this.countVisible });
     }
-    // if (this.state.categories !== prevState.categories && this.state.categories === []) {
-    // //Clean and generate the final array with unique Categories
-    // const uniqueCategories = [...new Set(this.categories)];
-    // this.setState({categories: uniqueCategories});
-    // }
-    console.log('componentDidUpdate');
+
+    if (!this.state.catLoaded) {
+      this.setState({
+        catLoaded: true,
+        categories: [...this.categories],
+      })
+    }
   }
 
   render() {
