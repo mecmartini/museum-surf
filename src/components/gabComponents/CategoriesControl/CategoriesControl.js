@@ -8,11 +8,20 @@ const StyledWrapper = styled.div`
   padding: 10px;
 `
 
+const StyledButton = styled.button`
+  border: none;
+  background: none;
+  &:hover{
+    cursor: pointer;
+  }
+`
+
 class CategoriesControl extends Component {
 
   render() {
     const {
       categories,
+      handleCategoriesClick
     } = this.props
 
     return(
@@ -22,7 +31,14 @@ class CategoriesControl extends Component {
               <h2>Categories:</h2>
               <ul>
                 {categories.map((item, k) => (
-                  <li key={k}>{item}</li>
+                  <li key={k}>
+                    <StyledButton
+                      value={item.name}
+                      onClick={handleCategoriesClick}>
+                      {item.name}
+                    </StyledButton>
+
+                  </li>
                 ))}
               </ul>
 

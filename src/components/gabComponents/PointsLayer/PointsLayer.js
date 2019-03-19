@@ -48,10 +48,21 @@ class PointsLayer extends Component {
     this.setState({ showNotMuseumPics: !showNotMuseumPics, count: 0 })
   }
 
+  handleCategoriesClick = (e) => {
+    const value = e.target.value;
+    const { categories } = this.state;
+    const categoriesUpdated = categories.map(item => {
+      if (item.name === value) {
+        item.status = !item.status
+      }
+      return item
+    })
+    this.setState({categories: categoriesUpdated})
+  }
+
   onEachFeature = (feature, layer) => {
     this.countVisible++;
     this.categories.add(feature.properties.category);
-    console.log('onEachFeature');
 
     layer.on({
         click: this.handleClick,
@@ -147,9 +158,14 @@ class PointsLayer extends Component {
     }
 
     if (!this.state.catLoaded) {
+      const categories = [...this.categories];
+      const categoriesWithStatus = categories.map(item => (
+        {name: item, status: true}
+      ))
+
       this.setState({
         catLoaded: true,
-        categories: [...this.categories],
+        categories: categoriesWithStatus,
       })
     }
   }
@@ -190,16 +206,35 @@ class PointsLayer extends Component {
       height: "20px",
     };
 
-    console.log(`categories from render: ${categories}`);
     if (data) {
-      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}`
+      let catKey = 'all'
+      if (categories.length) {
+        catKey = categories.reduce(
+          (key, category) => {
+            let firstKey = key;
+            if(typeof key === 'object') {
+              firstKey = (key.status ? '1' : '0')
+            }
+
+            return firstKey.concat((category.status ? '1' : '0'))
+          }
+        )
+      }
+      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${catKey}`
+
       return (
         <GeoJSON
           key={layerKey}
           data={data}
           style={style}
           onEachFeature={this.onEachFeature}
-          filter={feature => (filterLayers(feature, showMuseumPics, showNotMuseumPics)
+          filter={feature => (
+            filterLayers(
+              feature,
+              showMuseumPics,
+              showNotMuseumPics,
+              categories
+            )
           )}
           pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
         >
@@ -216,7 +251,8 @@ class PointsLayer extends Component {
             percentageMuseum={percentageMuseum}
             percentageNotMuseum={percentageNotMuseum}/>
           <CategoriesControl
-            categories={categories}/>
+            categories={categories}
+            handleCategoriesClick={this.handleCategoriesClick}/>
           <Popup onClose={this.handlePopupClose}>
             <h5 style={h5Style}>{location}</h5>
             <img style={imgStyle} src={image} alt={location} />
@@ -235,21 +271,52 @@ class PointsLayer extends Component {
   }
 }
 
-const filterLayers = (feature, showMuseumPics, showNotMuseumPics) => {
+const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories) => {
+  const category = feature.properties.category
+  let checkCategory = true;
+  if (categories.length) {
+    checkCategory = categories.reduce((catStatus, cat) => {
+      if (
+        typeof catStatus === 'object'
+        && catStatus.name === category
+        && catStatus.status === true
+      ) {
+        return true
+      }
+
+      if (catStatus === true) {
+        return true
+      }
+
+      if (
+        cat.name === category
+        && cat.status === true
+      ) {
+        return true
+      }
+
+      return false;
+    })
+  }
+
   if (showMuseumPics === false && showNotMuseumPics === false) {
     return false;
   }
 
-  if (showMuseumPics === true && showNotMuseumPics === true) {
+  if (
+    showMuseumPics === true
+    && showNotMuseumPics === true
+    && checkCategory
+  ) {
     return true;
   }
 
   const isMuseum = feature.properties.museum;
-  if (showMuseumPics === true && isMuseum === 1) {
+  if (showMuseumPics === true && isMuseum === 1 && checkCategory) {
     return true;
   }
 
-  if (showNotMuseumPics === true && isMuseum === 0) {
+  if (showNotMuseumPics === true && isMuseum === 0 && checkCategory) {
     return true;
   }
 
