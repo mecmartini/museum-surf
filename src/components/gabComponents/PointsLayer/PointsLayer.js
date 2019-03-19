@@ -49,6 +49,7 @@ class PointsLayer extends Component {
   }
 
   handleCategoriesClick = (e) => {
+    this.countVisible = 0;
     const value = e.target.value;
     const { categories } = this.state;
     const categoriesUpdated = categories.map(item => {
@@ -158,6 +159,7 @@ class PointsLayer extends Component {
     }
 
     if (!this.state.catLoaded) {
+      this.countVisible = 0;
       const categories = [...this.categories];
       const categoriesWithStatus = categories.map(item => (
         {name: item, status: true}
