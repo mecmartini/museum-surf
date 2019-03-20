@@ -64,6 +64,17 @@ class PointsLayer extends Component {
     this.setState({ categories: categoriesUpdated })
   }
 
+  handleCategoriesAllClick = (e) => {
+    this.countVisible = 0;
+    const { categories } = this.state;
+    const categoriesUpdated = categories.map(item => {
+      item.status = true
+
+      return item
+    })
+    this.setState({ categories: categoriesUpdated })
+  }
+
   onEachFeature = (feature, layer) => {
     const category = feature.properties.category;
     this.countVisible++;
@@ -286,6 +297,7 @@ class PointsLayer extends Component {
           <CategoriesControl
             categories={categories}
             handleCategoriesClick={this.handleCategoriesClick}
+            handleCategoriesAllClick={this.handleCategoriesAllClick}
           />
 
           <ZoomControl position="topcenter" />

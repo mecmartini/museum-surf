@@ -6,13 +6,30 @@ const StyledWrapper = styled.div`
   background: white;
   border: 1px solid red;
   padding: 10px;
+  ul {
+    list-style: none outside none;
+    li {
+      margin-bottom: 5px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 `
 
 const StyledButton = styled.button`
   border: none;
-  background: none;
-  &:hover{
+  background: #ffffff;
+  color: #0065a2;
+  padding: 5px;
+  text-transform: uppercase;
+  &:hover {
     cursor: pointer;
+  }
+  &.active,
+  &.active:hover {
+    background: #0065a2;
+    color: #f1ffe7;
   }
 `
 
@@ -21,7 +38,8 @@ class CategoriesControl extends Component {
   render() {
     const {
       categories,
-      handleCategoriesClick
+      handleCategoriesClick,
+      handleCategoriesAllClick
     } = this.props
 
     return(
@@ -30,12 +48,22 @@ class CategoriesControl extends Component {
         <StyledWrapper>
               <h2>Categories:</h2>
               <ul>
+                <li>
+                  <StyledButton
+                    className={"active"}
+                    value="all"
+                    onClick={handleCategoriesAllClick}
+                  >
+                    <strong>All</strong>
+                  </StyledButton>
+                </li>
                 {categories.map((item, k) => (
                   <li key={k}>
                     <StyledButton
+                      className={item.status ? 'active' : ''}
                       value={item.name}
                       onClick={handleCategoriesClick}>
-                      {item.name}: {item.percentage}%
+                      <strong>{item.name}:</strong> <i>{item.percentage}%</i>
                     </StyledButton>
 
                   </li>
