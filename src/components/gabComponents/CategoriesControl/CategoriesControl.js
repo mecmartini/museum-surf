@@ -42,6 +42,29 @@ class CategoriesControl extends Component {
       handleCategoriesAllClick
     } = this.props
 
+    let allCategoriesActive = true;
+    if (categories.length) {
+      allCategoriesActive = categories.reduce(
+        (allActive, category) => {
+          let active = true;
+          if(typeof allActive === 'object') {
+            active = allActive.status;
+          }
+          else {
+            active = allActive;
+          }
+
+          if (!active) {
+            return active
+          }
+
+          active = category.status;
+
+          return active;
+        }
+      )
+    }
+
     return(
       <Control
         position="topright">
@@ -50,7 +73,7 @@ class CategoriesControl extends Component {
               <ul>
                 <li>
                   <StyledButton
-                    className={"active"}
+                    className={allCategoriesActive ? 'active' : ''  }
                     value="all"
                     onClick={handleCategoriesAllClick}
                   >
