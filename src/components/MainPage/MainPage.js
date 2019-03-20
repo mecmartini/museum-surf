@@ -32,6 +32,7 @@ class MainContainer extends Component {
         <MapStyled
           ref={this.mapRef}
           bounds={bounds}
+          zoomControl={false}
         >
           <BaseMap/>
 

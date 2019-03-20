@@ -1,0 +1,28 @@
+.leaflet-touch .leaflet-control-zoom.leaflet-bar {
+  border: none;
+}
+
+.leaflet-touch .leaflet-bar a.leaflet-control-zoom-in,
+.leaflet-touch .leaflet-bar a.leaflet-control-zoom-out {
+  display: inline-block;
+}
+
+.leaflet-touch .leaflet-bar a.leaflet-control-zoom-in {
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 2px;
+  border-bottom: 0;
+  border-right: 1px solid #ccc;
+}
+
+.leaflet-touch .leaflet-bar a.leaflet-control-zoom-out {
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 2px;
+}
+
+.leaflet-touch .leaflet-bar a {
+  color: #0065a2;
+}
+
+.leaflet-touch .leaflet-bar a:hover {
+  color: #023e73;
+}

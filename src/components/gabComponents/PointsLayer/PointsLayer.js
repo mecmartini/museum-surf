@@ -1,18 +1,21 @@
-import React, { Component } from 'react';
-import { GeoJSON, Popup } from 'react-leaflet';
+import React, { Component, Fragment } from 'react';
+import L from 'leaflet';
+import { GeoJSON, Popup, ZoomControl } from 'react-leaflet';
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
 import InfoControl from '../InfoControl'
+import './src/L.Control.Center.js'
 import CategoriesControl from '../CategoriesControl'
-import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
+import './point-layers.min.css';
 
 class PointsLayer extends Component {
   countVisible = 0;
   categories = new Set();
+  categoriesCount = {};
 
   constructor(props) {
     super(props);
@@ -58,12 +61,17 @@ class PointsLayer extends Component {
       }
       return item
     })
-    this.setState({categories: categoriesUpdated})
+    this.setState({ categories: categoriesUpdated })
   }
 
   onEachFeature = (feature, layer) => {
+    const category = feature.properties.category;
     this.countVisible++;
-    this.categories.add(feature.properties.category);
+    this.categories.add(category);
+    if (this.categoriesCount[category] === undefined) {
+      this.categoriesCount[category] = 0;
+    }
+    this.categoriesCount[category]++;
 
     layer.on({
         click: this.handleClick,
@@ -159,10 +167,16 @@ class PointsLayer extends Component {
     }
 
     if (!this.state.catLoaded) {
+      const { total } = this.state;
       this.countVisible = 0;
       const categories = [...this.categories];
       const categoriesWithStatus = categories.map(item => (
-        {name: item, status: true}
+        {
+          name: item,
+          status: true,
+          count: (this.categoriesCount[item] !== undefined ? this.categoriesCount[item] : 0),
+          percentage: (this.categoriesCount[item] !== undefined ? (this.categoriesCount[item] * 100 / total).toFixed(2) : 0),
+        }
       ))
 
       this.setState({
@@ -225,47 +239,57 @@ class PointsLayer extends Component {
       const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${catKey}`
 
       return (
-        <GeoJSON
-          key={layerKey}
-          data={data}
-          style={style}
-          onEachFeature={this.onEachFeature}
-          filter={feature => (
-            filterLayers(
-              feature,
-              showMuseumPics,
-              showNotMuseumPics,
-              categories
-            )
-          )}
-          pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
-        >
+        <Fragment>
+          <GeoJSON
+            key={layerKey}
+            data={data}
+            style={style}
+            onEachFeature={this.onEachFeature}
+            filter={feature => (
+              filterLayers(
+                feature,
+                showMuseumPics,
+                showNotMuseumPics,
+                categories
+              )
+            )}
+            pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
+          >
+            <Popup onClose={this.handlePopupClose}>
+              <h5 style={h5Style}>{location}</h5>
+              <img style={imgStyle} src={image} alt={location} />
+              {hashtag &&
+                <ul>
+                  {hashtag.map((item) => <li>{item}</li>)}
+                </ul>
+              }
+              <b>Country:</b><span>{country}</span>
+            </Popup>
+          </GeoJSON>
+
           <LayersControl
             toggleShowMuseum={this.toggleShowMuseum}
             toggleShowNotMuseum={this.toggleShowNotMuseum}
             museumVisible={showMuseumPics}
-            notMuseumVisible={showNotMuseumPics}/>
+            notMuseumVisible={showNotMuseumPics}
+          />
+
           <InfoControl
             total={total}
             count={count}
             totalIsMuseum={totalIsMuseum}
             totalIsNotMuseum={totalIsNotMuseum}
             percentageMuseum={percentageMuseum}
-            percentageNotMuseum={percentageNotMuseum}/>
+            percentageNotMuseum={percentageNotMuseum}
+          />
+
           <CategoriesControl
             categories={categories}
-            handleCategoriesClick={this.handleCategoriesClick}/>
-          <Popup onClose={this.handlePopupClose}>
-            <h5 style={h5Style}>{location}</h5>
-            <img style={imgStyle} src={image} alt={location} />
-            {hashtag &&
-              <ul>
-                {hashtag.map((item) => <li>{item}</li>)}
-              </ul>
-            }
-            <b>Country:</b><span>{country}</span>
-          </Popup>
-        </GeoJSON>
+            handleCategoriesClick={this.handleCategoriesClick}
+          />
+
+          <ZoomControl position="topcenter" />
+        </Fragment>
       );
     }
 

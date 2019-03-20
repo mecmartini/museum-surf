@@ -20,15 +20,19 @@ class LayersControl extends Component {
 
     return(
       <Control
-        position="topright">
+        position="topleft">
         <StyledWrapper>
-              <button
-                onClick={toggleShowMuseum}
-              >{museumVisible ? 'Hide' : 'Show'} Museum pics</button>
-              <br />
-              <button
-                onClick={toggleShowNotMuseum}
-              >{notMuseumVisible ? 'Hide' : 'Show'} not Museum pics</button>
+          <button
+            onClick={toggleShowMuseum}
+          >
+            {museumVisible ? 'Hide' : 'Show'} Museum pics
+          </button>
+
+          <button
+            onClick={toggleShowNotMuseum}
+          >
+            {notMuseumVisible ? 'Hide' : 'Show'} not Museum pics
+          </button>
         </StyledWrapper>
       </Control>
     )

@@ -35,7 +35,7 @@ class CategoriesControl extends Component {
                     <StyledButton
                       value={item.name}
                       onClick={handleCategoriesClick}>
-                      {item.name}
+                      {item.name}: {item.percentage}%
                     </StyledButton>
 
                   </li>
