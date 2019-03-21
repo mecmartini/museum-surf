@@ -64,11 +64,22 @@ class PointsLayer extends Component {
     this.setState({ categories: categoriesUpdated })
   }
 
-  handleCategoriesAllClick = (e) => {
+  handleCategoriesSelectAllClick = (e) => {
     this.countVisible = 0;
     const { categories } = this.state;
     const categoriesUpdated = categories.map(item => {
       item.status = true
+
+      return item
+    })
+    this.setState({ categories: categoriesUpdated })
+  }
+
+  handleCategoriesDeselectAllClick = (e) => {
+    this.countVisible = 0;
+    const { categories } = this.state;
+    const categoriesUpdated = categories.map(item => {
+      item.status = false
 
       return item
     })
@@ -297,7 +308,8 @@ class PointsLayer extends Component {
           <CategoriesControl
             categories={categories}
             handleCategoriesClick={this.handleCategoriesClick}
-            handleCategoriesAllClick={this.handleCategoriesAllClick}
+            handleCategoriesSelectAllClick={this.handleCategoriesSelectAllClick}
+            handleCategoriesDeselectAllClick={this.handleCategoriesDeselectAllClick}
           />
 
           <ZoomControl position="topcenter" />

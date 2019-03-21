@@ -25,6 +25,7 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   border: 1px solid #0065a2;
   box-sizing: border-box;
+  font-weight: bold;
   &:hover {
     cursor: pointer;
   }
@@ -32,6 +33,27 @@ const StyledButton = styled.button`
   &.active:hover {
     background: #0065a2;
     color: #f1ffe7;
+  }
+  &.cat-all {
+    border: 1px solid #70b77e;
+    background: #70b77e;
+    color: #f1ffe7;
+    &.active,
+    &.active:hover {
+      background: #70b77e;
+      color: #f1ffe7;
+    }
+  }
+  &.cat-none {
+    border: 1px solid #9e2b25;
+    background: #9e2b25;
+    color: #f1ffe7;
+    margin-left: 10px;
+    &.active,
+    &.active:hover {
+      background: #9e2b25;
+      color: #f1ffe7;
+    }
   }
 `
 
@@ -41,7 +63,8 @@ class CategoriesControl extends Component {
     const {
       categories,
       handleCategoriesClick,
-      handleCategoriesAllClick
+      handleCategoriesSelectAllClick,
+      handleCategoriesDeselectAllClick
     } = this.props
 
     let allCategoriesActive = true;
@@ -75,11 +98,18 @@ class CategoriesControl extends Component {
               <ul>
                 <li>
                   <StyledButton
-                    className={allCategoriesActive ? 'active' : ''  }
+                    className={allCategoriesActive ? 'cat-all active' : 'cat-all'  }
                     value="all"
-                    onClick={handleCategoriesAllClick}
+                    onClick={handleCategoriesSelectAllClick}
                   >
-                    All
+                    Select All
+                  </StyledButton>
+                  <StyledButton
+                    className={allCategoriesActive ? 'cat-none active' : 'cat-none'  }
+                    value="all"
+                    onClick={handleCategoriesDeselectAllClick}
+                  >
+                    Deselect All
                   </StyledButton>
                 </li>
                 {categories.map((item, k) => (
