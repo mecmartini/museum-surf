@@ -373,7 +373,7 @@ class PointsLayer extends Component {
                 <LocationLabel>{location}</LocationLabel>
                 <CountryLabel>{country}</CountryLabel>
                 <img style={imgStyle} src={image} alt={location} />
-                <CategoryButton value={category} onClick={this.handlePointCategoryClick}>{category}</CategoryButton>
+                <CategoryButton value={category} onClick={this.handlePointCategoryClick}>{category + ' + '}</CategoryButton>
                 {hashtag &&
                   <div>
                     {
