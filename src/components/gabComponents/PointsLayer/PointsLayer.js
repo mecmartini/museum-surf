@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { GeoJSON, Popup, ZoomControl } from 'react-leaflet';
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
+import styled from 'styled-components'
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
 import InfoControl from '../InfoControl'
@@ -11,6 +12,63 @@ import CategoriesControl from '../CategoriesControl'
 
 import 'leaflet/dist/leaflet.css';
 import './point-layers.min.css';
+
+const StyledButton = styled.button`
+  border: none;
+  background: #17bebb;
+  color: #f1ffe7;
+  padding: 5px;
+  text-transform: uppercase;
+  border: 1px solid #17bebb;
+  box-sizing: border-box;
+  font-weight: bold;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  &:last-child {
+    margin-right: 0;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+const PopupWrapper = styled.div`
+
+`
+
+const LocationLabel = styled.h5`
+  text-transform: uppercase;
+  color: #0065a2;
+  font-weight: bold;
+  min-width: 300px;
+  font-size: 16px;
+  margin-bottom: 0;
+`
+
+const CountryLabel = styled.div`
+  text-transform: uppercase;
+  margin: 5px 0 10px;
+  font-weight: bold;
+  color: #9e2b25;
+  font-size: 12px;
+  font-style: italic;
+`
+
+const CategoryButton = styled.button`
+  border: none;
+  background: #0065a2;
+  color: #f1ffe7;
+  padding: 5px;
+  text-transform: uppercase;
+  border: 1px solid #0065a2;
+  box-sizing: border-box;
+  font-weight: bold;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  :hover {
+    cursor: pointer;
+  }
+`
 
 class PointsLayer extends Component {
   countVisible = 0;
@@ -24,6 +82,7 @@ class PointsLayer extends Component {
       data: null,
       image: null,
       location: null,
+      category: null,
       hashtag: null,
       country: null,
       showMuseumPics: true,
@@ -107,6 +166,7 @@ class PointsLayer extends Component {
       location: featureProps.location,
       hashtag: featureProps.hashtags,
       country: featureProps.country,
+      category: featureProps.category,
     })
   }
 
@@ -116,7 +176,41 @@ class PointsLayer extends Component {
       location: null,
       hashtag: null,
       country: null,
+      category: null,
     })
+  }
+
+  handlePointCategoryClick = (e) => {
+    const cat = e.target.value;
+
+    this.countVisible = 0;
+    const { categories } = this.state;
+    const categoriesUpdated = categories.map(item => {
+      if (item.name === cat) {
+        item.status = true;
+      }
+      else {
+        item.status = false;
+      }
+
+      return item
+    })
+    this.setState({ categories: categoriesUpdated })
+  }
+
+  handlePointHashtagClick = (e) => {
+    console.log('POINT HASHTAG CLICK')
+    console.log(e.target.value)
+    /*
+    this.countVisible = 0;
+    const { categories } = this.state;
+    const categoriesUpdated = categories.map(item => {
+      item.status = false
+
+      return item
+    })
+    this.setState({ categories: categoriesUpdated })
+    */
   }
 
   componentDidMount() {
@@ -215,6 +309,7 @@ class PointsLayer extends Component {
       location,
       hashtag,
       country,
+      category,
       showMuseumPics,
       showNotMuseumPics,
       total,
@@ -228,10 +323,6 @@ class PointsLayer extends Component {
 
     const imgStyle = {
       width: "100%",
-    }
-
-    const h5Style = {
-      minWidth: "250px",
     }
 
     const style = {
@@ -278,14 +369,24 @@ class PointsLayer extends Component {
             pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
           >
             <Popup onClose={this.handlePopupClose}>
-              <h5 style={h5Style}>{location}</h5>
-              <img style={imgStyle} src={image} alt={location} />
-              {hashtag &&
-                <ul>
-                  {hashtag.map((item) => <li>{item}</li>)}
-                </ul>
-              }
-              <b>Country:</b><span>{country}</span>
+              <PopupWrapper>
+                <LocationLabel>{location}</LocationLabel>
+                <CountryLabel>{country}</CountryLabel>
+                <img style={imgStyle} src={image} alt={location} />
+                <CategoryButton value={category} onClick={this.handlePointCategoryClick}>{category}</CategoryButton>
+                {hashtag &&
+                  <div>
+                    {
+                      hashtag.map(
+                        (item, key) =>
+                          <StyledButton key={key} value={item} onClick={this.handlePointHashtagClick}>
+                            {item}
+                          </StyledButton>
+                      )
+                    }
+                  </div>
+                }
+              </PopupWrapper>
             </Popup>
           </GeoJSON>
 
