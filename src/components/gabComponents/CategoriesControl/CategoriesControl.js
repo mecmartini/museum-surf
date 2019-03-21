@@ -23,6 +23,8 @@ const StyledButton = styled.button`
   color: #0065a2;
   padding: 5px;
   text-transform: uppercase;
+  border: 1px solid #0065a2;
+  box-sizing: border-box;
   &:hover {
     cursor: pointer;
   }
@@ -77,7 +79,7 @@ class CategoriesControl extends Component {
                     value="all"
                     onClick={handleCategoriesAllClick}
                   >
-                    <strong>All</strong>
+                    All
                   </StyledButton>
                 </li>
                 {categories.map((item, k) => (
@@ -86,7 +88,7 @@ class CategoriesControl extends Component {
                       className={item.status ? 'active' : ''}
                       value={item.name}
                       onClick={handleCategoriesClick}>
-                      <strong>{item.name}:</strong> <i>{item.percentage}%</i>
+                      {item.name}: {item.percentage}%
                     </StyledButton>
 
                   </li>
