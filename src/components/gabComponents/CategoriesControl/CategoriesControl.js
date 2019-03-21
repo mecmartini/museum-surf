@@ -37,22 +37,22 @@ const StyledButton = styled.button`
   &.cat-all {
     border: 1px solid #70b77e;
     background: #70b77e;
-    color: #f1ffe7;
+    color: #ffffff;
     &.active,
     &.active:hover {
       background: #70b77e;
-      color: #f1ffe7;
+      color: #ffffff;
     }
   }
   &.cat-none {
     border: 1px solid #9e2b25;
     background: #9e2b25;
-    color: #f1ffe7;
+    color: #ffffff;
     margin-left: 10px;
     &.active,
     &.active:hover {
       background: #9e2b25;
-      color: #f1ffe7;
+      color: #ffffff;
     }
   }
 `

@@ -8,6 +8,23 @@ const StyledWrapper = styled.div`
   padding: 10px;
 `
 
+const StyledButton = styled.button`
+  background: #9e2b25;
+  color: #ffffff;
+  padding: 5px;
+  text-transform: uppercase;
+  border: none;
+  box-sizing: border-box;
+  font-weight: bold;
+  &.active,
+  &.active:hover {
+    background: #70b77e;
+  }
+  &.margin-sx {
+    margin-left: 10px;
+  }
+`
+
 class LayersControl extends Component {
 
   render() {
@@ -22,17 +39,19 @@ class LayersControl extends Component {
       <Control
         position="topleft">
         <StyledWrapper>
-          <button
+          <StyledButton
+            className={museumVisible ? 'active' : ''}
             onClick={toggleShowMuseum}
           >
-            {museumVisible ? 'Hide' : 'Show'} Museum pics
-          </button>
+            {museumVisible ? 'Hide' : 'Show'} Museum
+          </StyledButton>
 
-          <button
+          <StyledButton
+            className={notMuseumVisible ? 'active margin-sx' : 'margin-sx'}
             onClick={toggleShowNotMuseum}
           >
-            {notMuseumVisible ? 'Hide' : 'Show'} not Museum pics
-          </button>
+            {notMuseumVisible ? 'Hide' : 'Show'} Not Museum
+          </StyledButton>
         </StyledWrapper>
       </Control>
     )
