@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import styled from 'styled-components'
 import CategoriesControl from '../CategoriesControl'
+import CountriesControl from '../CountriesControl'
 
 import "react-tabs/style/react-tabs.css";
 
@@ -24,11 +25,14 @@ class TabsControl extends Component {
       categories,
       handleCategoriesClick,
       handleCategoriesSelectAllClick,
+      countries,
+      handleCountriesClick,
+      handleCountriesSelectAllClick,
     } = this.props
 
     return(
       <StyledWrapper>
-        <Tabs>
+        <Tabs forceRenderTabPanel={true}>
           <TabList>
             <Tab>Categories</Tab>
             <Tab>Countries</Tab>
@@ -42,7 +46,11 @@ class TabsControl extends Component {
             />
           </TabPanel>
           <TabPanel>
-            <h2>Any content 2</h2>
+            <CountriesControl
+              countries={countries}
+              handleCountriesClick={handleCountriesClick}
+              handleCountriesSelectAllClick={handleCountriesSelectAllClick}
+            />
           </TabPanel>
         </Tabs>
       </StyledWrapper>

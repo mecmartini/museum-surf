@@ -39,30 +39,32 @@ const StyledButton = styled.button`
     background: -webkit-linear-gradient(left, #70b77e 0%,#70b77e ${props => props.percentage}%,transparent ${props => props.percentage + 0.1}%,transparent 100%);
     background: linear-gradient(to right, #70b77e 0%,#70b77e ${props => props.percentage}%,transparent ${props => props.percentage + 0.1}%,transparent 100%);
   }
-  &.cat-all {
+  &.countries-all {
     border: 1px solid #70b77e;
     background: #70b77e;
-    &:hover {
+    &.active,
+    &.active:hover {
       background: #70b77e;
+      color: #ffffff;
     }
   }
 `
 
-class CategoriesControl extends Component {
+class CountriesControl extends Component {
 
   render() {
     const {
-      categories,
-      handleCategoriesClick,
-      handleCategoriesSelectAllClick,
+      countries,
+      handleCountriesClick,
+      handleCountriesSelectAllClick,
     } = this.props
 
-    let allCategoriesActive = true;
-    if (categories.length) {
-      categories.sort(compare);
+    let allCountriesActive = true;
+    if (countries.length) {
+      countries.sort(compare);
 
-      allCategoriesActive = categories.reduce(
-        (allActive, category) => {
+      allCountriesActive = countries.reduce(
+        (allActive, country) => {
           let active = true;
           if(typeof allActive === 'object') {
             active = allActive.status;
@@ -75,7 +77,7 @@ class CategoriesControl extends Component {
             return active
           }
 
-          active = category.status;
+          active = country.status;
 
           return active;
         }
@@ -85,14 +87,14 @@ class CategoriesControl extends Component {
     return(
       <Fragment>
         <StyledButton
-          className="cat-all"
+          className="countries-all"
           value="all"
-          onClick={handleCategoriesSelectAllClick}
+          onClick={handleCountriesSelectAllClick}
         >
           Select All
         </StyledButton>
         <StyledList>
-          {categories.map((item, k) => (
+          {countries.map((item, k) => (
             <li key={k} className={item.status ? 'active' : ''}>
               <StyledButton
                 className={item.status ? 'active' : ''}
@@ -100,7 +102,7 @@ class CategoriesControl extends Component {
                 name={item.name}
                 title={item.name}
                 percentage={Number.parseFloat(item.percentage)}
-                onClick={handleCategoriesClick}
+                onClick={handleCountriesClick}
               >
                 {item.name} {item.percentage}%
               </StyledButton>
@@ -120,4 +122,4 @@ function compare(a, b){
   return 0;
 }
 
-export default CategoriesControl
+export default CountriesControl

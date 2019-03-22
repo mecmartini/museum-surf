@@ -103,6 +103,7 @@ class PointsLayer extends Component {
       categories: [],
       countrySelected: null,
       countries: [],
+      countriesLoaded: false,
     }
   }
 
@@ -142,15 +143,28 @@ class PointsLayer extends Component {
     this.setState({ categories: categoriesUpdated })
   }
 
-  handleCategoriesDeselectAllClick = (e) => {
+  handleCountriesClick = (e) => {
     this.countVisible = 0;
-    const { categories } = this.state;
-    const categoriesUpdated = categories.map(item => {
-      item.status = false
+    const value = e.target.value;
+    const { countries } = this.state;
+    const countriesUpdated = countries.map(item => {
+      if (item.name === value) {
+        item.status = !item.status
+      }
+      return item
+    })
+    this.setState({ countries: countriesUpdated, countrySelected: null })
+  }
+
+  handleCountriesSelectAllClick = (e) => {
+    this.countVisible = 0;
+    const { countries } = this.state;
+    const countriesUpdated = countries.map(item => {
+      item.status = true
 
       return item
     })
-    this.setState({ categories: categoriesUpdated })
+    this.setState({ countries: countriesUpdated, countrySelected: null })
   }
 
   onEachFeature = (feature, layer) => {
@@ -214,6 +228,24 @@ class PointsLayer extends Component {
     this.setState({ categories: categoriesUpdated })
   }
 
+  handlePointCountryClick = (e) => {
+    const country = e.target.value;
+
+    this.countVisible = 0;
+    const { countries } = this.state;
+    const countriesUpdated = countries.map(item => {
+      if (item.name === country) {
+        item.status = true;
+      }
+      else {
+        item.status = false;
+      }
+
+      return item
+    })
+    this.setState({ countrySelected: e.target.value, countries: countriesUpdated })
+  }
+
   handlePointHashtagClick = (e) => {
     console.log('POINT HASHTAG CLICK')
     console.log(e.target.value)
@@ -227,12 +259,6 @@ class PointsLayer extends Component {
     })
     this.setState({ categories: categoriesUpdated })
     */
-  }
-
-  handlePointCountryClick = (e) => {
-    console.log('COUNTRY CLICK')
-    console.log(e.target.value)
-    this.setState({ countrySelected: e.target.value })
   }
 
   componentDidMount() {
@@ -322,6 +348,25 @@ class PointsLayer extends Component {
         categories: categoriesWithStatus,
       })
     }
+
+    if (!this.state.countriesLoaded) {
+      const { total } = this.state;
+      this.countVisible = 0;
+      const countries = [...this.countries];
+      const countriesWithStatus = countries.map(item => (
+        {
+          name: item,
+          status: true,
+          count: (this.countriesCount[item] !== undefined ? this.countriesCount[item] : 0),
+          percentage: (this.countriesCount[item] !== undefined ? (this.countriesCount[item] * 100 / total).toFixed(2) : 0),
+        }
+      ))
+
+      this.setState({
+        countriesLoaded: true,
+        countries: countriesWithStatus,
+      })
+    }
   }
 
   render() {
@@ -342,6 +387,7 @@ class PointsLayer extends Component {
       percentageNotMuseum,
       categories,
       countrySelected,
+      countries,
     } = this.state;
 
     const imgStyle = {
@@ -372,7 +418,22 @@ class PointsLayer extends Component {
           }
         )
       }
-      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${countrySelected}_${catKey}`
+
+      let countryKey = 'all'
+      if (countries.length) {
+        countryKey = countries.reduce(
+          (key, country) => {
+            let firstKey = key;
+            if(typeof key === 'object') {
+              firstKey = (key.status ? '1' : '0')
+            }
+
+            return firstKey.concat((country.status ? '1' : '0'))
+          }
+        )
+      }
+
+      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${countrySelected}_${catKey}_${countryKey}`
 
       return (
         <Fragment>
@@ -387,7 +448,7 @@ class PointsLayer extends Component {
                 showMuseumPics,
                 showNotMuseumPics,
                 categories,
-                countrySelected
+                countries,
               )
             )}
             pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
@@ -421,6 +482,9 @@ class PointsLayer extends Component {
             categories={categories}
             handleCategoriesClick={this.handleCategoriesClick}
             handleCategoriesSelectAllClick={this.handleCategoriesSelectAllClick}
+            countries={countries}
+            handleCountriesClick={this.handleCountriesClick}
+            handleCountriesSelectAllClick={this.handleCountriesSelectAllClick}
           />
 
           <InfoControl
@@ -442,18 +506,34 @@ class PointsLayer extends Component {
   }
 }
 
-const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories, countrySelected) => {
+const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories, countries) => {
   const category = feature.properties.category
   const country = feature.properties.country
 
-  if (countrySelected && country === countrySelected) {
-    console.log('FILTER LAYERS')
-    console.log(country)
-    console.log(countrySelected)
-  }
+  let checkCountry = true;
+  if (countries.length) {
+    checkCountry = countries.reduce((countryStatus, item) => {
+      if (
+        typeof countryStatus === 'object'
+        && countryStatus.name === country
+        && countryStatus.status === true
+      ) {
+        return true
+      }
 
-  if (countrySelected && country !== countrySelected) {
-    return false;
+      if (countryStatus === true) {
+        return true
+      }
+
+      if (
+        item.name === country
+        && item.status === true
+      ) {
+        return true
+      }
+
+      return false;
+    })
   }
 
   let checkCategory = true;
@@ -490,16 +570,17 @@ const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories, co
     showMuseumPics === true
     && showNotMuseumPics === true
     && checkCategory
+    && checkCountry
   ) {
     return true;
   }
 
   const isMuseum = feature.properties.museum;
-  if (showMuseumPics === true && isMuseum === 1 && checkCategory) {
+  if (showMuseumPics === true && isMuseum === 1 && checkCategory && checkCountry) {
     return true;
   }
 
-  if (showNotMuseumPics === true && isMuseum === 0 && checkCategory) {
+  if (showNotMuseumPics === true && isMuseum === 0 && checkCategory && checkCountry) {
     return true;
   }
 

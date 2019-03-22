@@ -38,6 +38,9 @@ class LayersControl extends Component {
       categories,
       handleCategoriesClick,
       handleCategoriesSelectAllClick,
+      countries,
+      handleCountriesClick,
+      handleCountriesSelectAllClick,
     } = this.props
 
     return(
@@ -62,6 +65,9 @@ class LayersControl extends Component {
             categories={categories}
             handleCategoriesClick={handleCategoriesClick}
             handleCategoriesSelectAllClick={handleCategoriesSelectAllClick}
+            countries={countries}
+            handleCountriesClick={handleCountriesClick}
+            handleCountriesSelectAllClick={handleCountriesSelectAllClick}
           />
         </StyledWrapper>
       </Control>
