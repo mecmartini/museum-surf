@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import Control from '@skyeer/react-leaflet-custom-control'
+import TabsControl from '../TabsControl'
 
 const StyledWrapper = styled.div`
   background: white;
@@ -16,6 +17,7 @@ const StyledButton = styled.button`
   border: none;
   box-sizing: border-box;
   font-weight: bold;
+  margin-bottom: 10px;
   &.active,
   &.active:hover {
     background: #70b77e;
@@ -32,7 +34,10 @@ class LayersControl extends Component {
       toggleShowMuseum,
       toggleShowNotMuseum,
       museumVisible,
-      notMuseumVisible
+      notMuseumVisible,
+      categories,
+      handleCategoriesClick,
+      handleCategoriesSelectAllClick,
     } = this.props
 
     return(
@@ -52,6 +57,12 @@ class LayersControl extends Component {
           >
             {notMuseumVisible ? 'Hide' : 'Show'} Not Museum
           </StyledButton>
+
+          <TabsControl
+            categories={categories}
+            handleCategoriesClick={handleCategoriesClick}
+            handleCategoriesSelectAllClick={handleCategoriesSelectAllClick}
+          />
         </StyledWrapper>
       </Control>
     )

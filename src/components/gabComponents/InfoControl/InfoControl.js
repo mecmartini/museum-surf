@@ -2,10 +2,26 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import Control from '@skyeer/react-leaflet-custom-control'
 
+const dataReference = "1092";
+
 const StyledWrapper = styled.div`
   background: white;
   border: 1px solid red;
   padding: 10px;
+  ul {
+    list-style: none outside none;
+    padding: 0;
+    li {
+      text-transform: uppercase;
+      color: #0065a2;
+      font-size: 14px;
+    }
+  }
+`
+
+const CountryLabel = styled.h3`
+  text-transform: uppercase;
+  color: #0065a2;
 `
 
 class InfoControl extends Component {
@@ -18,33 +34,37 @@ class InfoControl extends Component {
       totalIsNotMuseum,
       percentageMuseum,
       percentageNotMuseum,
+      countrySelected
     } = this.props
 
     return(
       <Control
-        position="topleft">
+        position="topright">
         <StyledWrapper>
+              { countrySelected &&
+                <CountryLabel>{countrySelected}</CountryLabel>
+              }
               <ul>
                 <li>
-                  Data reference: 1092
+                  <strong>Data reference:</strong> <i>{dataReference}</i>
                 </li>
                 <li>
-                  Total points: {total}
+                  <strong>Total points:</strong> <i>{total}</i>
                 </li>
                 <li>
-                  Museum points: {totalIsMuseum}
+                  <strong>Museum points:</strong> <i>{totalIsMuseum}</i>
                 </li>
                 <li>
-                  Percentage museums: {percentageMuseum}%
+                  <strong>Percentage museums:</strong> <i>{percentageMuseum}%</i>
                 </li>
                 <li>
-                  Not museum points: {totalIsNotMuseum}
+                  <strong>Not museum points:</strong> <i>{totalIsNotMuseum}</i>
                 </li>
                 <li>
-                  Percentage not museums: {percentageNotMuseum}%
+                  <strong>Percentage not museums:</strong> <i>{percentageNotMuseum}%</i>
                 </li>
                 <li>
-                  Shown points: {count}
+                  <strong>Shown points:</strong> <i>{count}</i>
                 </li>
               </ul>
         </StyledWrapper>

@@ -8,7 +8,6 @@ import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
 import InfoControl from '../InfoControl'
 import './src/L.Control.Center.js'
-import CategoriesControl from '../CategoriesControl'
 
 import 'leaflet/dist/leaflet.css';
 import './point-layers.min.css';
@@ -32,10 +31,6 @@ const StyledButton = styled.button`
   }
 `
 
-const PopupWrapper = styled.div`
-
-`
-
 const LocationLabel = styled.h5`
   text-transform: uppercase;
   color: #0065a2;
@@ -45,13 +40,22 @@ const LocationLabel = styled.h5`
   margin-bottom: 0;
 `
 
-const CountryLabel = styled.div`
-  text-transform: uppercase;
-  margin: 5px 0 10px;
-  font-weight: bold;
+const CountryButton = styled.button`
+  border: none;
+  background: #ffffff;
   color: #9e2b25;
-  font-size: 12px;
+  padding: 5px;
+  text-transform: uppercase;
+  border: 1px solid #9e2b25;
+  box-sizing: border-box;
+  font-weight: bold;
   font-style: italic;
+  margin-right: 5px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  :hover {
+    cursor: pointer;
+  }
 `
 
 const CategoryButton = styled.button`
@@ -74,6 +78,8 @@ class PointsLayer extends Component {
   countVisible = 0;
   categories = new Set();
   categoriesCount = {};
+  countries = new Set();
+  countriesCount = {};
 
   constructor(props) {
     super(props);
@@ -95,6 +101,8 @@ class PointsLayer extends Component {
       percentageNotMuseum: null,
       catLoaded: false,
       categories: [],
+      countrySelected: null,
+      countries: [],
     }
   }
 
@@ -146,13 +154,21 @@ class PointsLayer extends Component {
   }
 
   onEachFeature = (feature, layer) => {
-    const category = feature.properties.category;
     this.countVisible++;
+
+    const category = feature.properties.category;
     this.categories.add(category);
     if (this.categoriesCount[category] === undefined) {
       this.categoriesCount[category] = 0;
     }
     this.categoriesCount[category]++;
+
+    const country = feature.properties.country;
+    this.countries.add(country);
+    if (this.countriesCount[country] === undefined) {
+      this.countriesCount[country] = 0;
+    }
+    this.countriesCount[country]++;
 
     layer.on({
         click: this.handleClick,
@@ -211,6 +227,12 @@ class PointsLayer extends Component {
     })
     this.setState({ categories: categoriesUpdated })
     */
+  }
+
+  handlePointCountryClick = (e) => {
+    console.log('COUNTRY CLICK')
+    console.log(e.target.value)
+    this.setState({ countrySelected: e.target.value })
   }
 
   componentDidMount() {
@@ -318,7 +340,8 @@ class PointsLayer extends Component {
       totalIsNotMuseum,
       percentageMuseum,
       percentageNotMuseum,
-      categories
+      categories,
+      countrySelected,
     } = this.state;
 
     const imgStyle = {
@@ -349,7 +372,7 @@ class PointsLayer extends Component {
           }
         )
       }
-      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${catKey}`
+      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${countrySelected}_${catKey}`
 
       return (
         <Fragment>
@@ -363,30 +386,29 @@ class PointsLayer extends Component {
                 feature,
                 showMuseumPics,
                 showNotMuseumPics,
-                categories
+                categories,
+                countrySelected
               )
             )}
             pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
           >
             <Popup onClose={this.handlePopupClose}>
-              <PopupWrapper>
-                <LocationLabel>{location}</LocationLabel>
-                <CountryLabel>{country}</CountryLabel>
-                <img style={imgStyle} src={image} alt={location} />
-                <CategoryButton value={category} onClick={this.handlePointCategoryClick}>{category + ' + '}</CategoryButton>
-                {hashtag &&
-                  <div>
-                    {
-                      hashtag.map(
-                        (item, key) =>
-                          <StyledButton key={key} value={item} onClick={this.handlePointHashtagClick}>
-                            {item}
-                          </StyledButton>
-                      )
-                    }
-                  </div>
-                }
-              </PopupWrapper>
+              <LocationLabel>{location}</LocationLabel>
+              <CountryButton value={country} onClick={this.handlePointCountryClick}>{country + ' + '}</CountryButton>
+              <img style={imgStyle} src={image} alt={location} />
+              <CategoryButton value={category} onClick={this.handlePointCategoryClick}>{category + ' + '}</CategoryButton>
+              {hashtag &&
+                <div>
+                  {
+                    hashtag.map(
+                      (item, key) =>
+                        <StyledButton key={key} value={item} onClick={this.handlePointHashtagClick}>
+                          {item}
+                        </StyledButton>
+                    )
+                  }
+                </div>
+              }
             </Popup>
           </GeoJSON>
 
@@ -395,6 +417,9 @@ class PointsLayer extends Component {
             toggleShowNotMuseum={this.toggleShowNotMuseum}
             museumVisible={showMuseumPics}
             notMuseumVisible={showNotMuseumPics}
+            categories={categories}
+            handleCategoriesClick={this.handleCategoriesClick}
+            handleCategoriesSelectAllClick={this.handleCategoriesSelectAllClick}
           />
 
           <InfoControl
@@ -404,13 +429,7 @@ class PointsLayer extends Component {
             totalIsNotMuseum={totalIsNotMuseum}
             percentageMuseum={percentageMuseum}
             percentageNotMuseum={percentageNotMuseum}
-          />
-
-          <CategoriesControl
-            categories={categories}
-            handleCategoriesClick={this.handleCategoriesClick}
-            handleCategoriesSelectAllClick={this.handleCategoriesSelectAllClick}
-            handleCategoriesDeselectAllClick={this.handleCategoriesDeselectAllClick}
+            countrySelected={countrySelected}
           />
 
           <ZoomControl position="topcenter" />
@@ -422,8 +441,20 @@ class PointsLayer extends Component {
   }
 }
 
-const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories) => {
+const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories, countrySelected) => {
   const category = feature.properties.category
+  const country = feature.properties.country
+
+  if (countrySelected && country === countrySelected) {
+    console.log('FILTER LAYERS')
+    console.log(country)
+    console.log(countrySelected)
+  }
+
+  if (countrySelected && country !== countrySelected) {
+    return false;
+  }
+
   let checkCategory = true;
   if (categories.length) {
     checkCategory = categories.reduce((catStatus, cat) => {
