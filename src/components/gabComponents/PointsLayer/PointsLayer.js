@@ -395,6 +395,7 @@ class PointsLayer extends Component {
             <Popup onClose={this.handlePopupClose}>
               <LocationLabel>{location}</LocationLabel>
               <CountryButton value={country} onClick={this.handlePointCountryClick}>{country + ' + '}</CountryButton>
+              <br />
               <img style={imgStyle} src={image} alt={location} />
               <CategoryButton value={category} onClick={this.handlePointCategoryClick}>{category + ' + '}</CategoryButton>
               {hashtag &&
