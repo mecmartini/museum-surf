@@ -7,14 +7,30 @@ import CountriesControl from '../CountriesControl'
 import "react-tabs/style/react-tabs.css";
 
 const StyledWrapper = styled.div`
-  ul {
+  ul.react-tabs__tab-list {
     list-style: none outside none;
     padding: 0;
+    text-align: center;
+    border: none;
+    margin: 0;
     li {
       text-transform: uppercase;
       color: #0065a2;
+      background: #f1ffe7;
+      border: 1px solid #f1ffe7:
       font-size: 14px;
+      &.react-tabs__tab--selected {
+        background: #0065a2;
+        color: #f1ffe7;
+        border: 1px solid #0065a2;
+        font-weight: bold;
+      }
     }
+  }
+  .react-tabs__tab-panel {
+    padding: 10px 15px;
+    border-top: 2px solid #0065a2;
+    border-radius: 10px;
   }
 `
 
@@ -25,9 +41,11 @@ class TabsControl extends Component {
       categories,
       handleCategoriesClick,
       handleCategoriesSelectAllClick,
+      handleCategoriesDeselectAllClick,
       countries,
       handleCountriesClick,
       handleCountriesSelectAllClick,
+      handleCountriesDeselectAllClick,
     } = this.props
 
     return(
@@ -43,6 +61,7 @@ class TabsControl extends Component {
               categories={categories}
               handleCategoriesClick={handleCategoriesClick}
               handleCategoriesSelectAllClick={handleCategoriesSelectAllClick}
+              handleCategoriesDeselectAllClick={handleCategoriesDeselectAllClick}
             />
           </TabPanel>
           <TabPanel>
@@ -50,6 +69,7 @@ class TabsControl extends Component {
               countries={countries}
               handleCountriesClick={handleCountriesClick}
               handleCountriesSelectAllClick={handleCountriesSelectAllClick}
+              handleCountriesDeselectAllClick={handleCountriesDeselectAllClick}
             />
           </TabPanel>
         </Tabs>

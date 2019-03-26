@@ -1,7 +1,9 @@
-import MapPinIcon from './MapPinIcon'
-import MapPinIconMuseum from './MapPinIconMuseum'
+import { MapPinIcon, PinIcon } from './MapPinIcon'
+import { MapPinIconMuseum, PinIconMuseum } from './MapPinIconMuseum'
 
 export  {
   MapPinIcon,
-  MapPinIconMuseum
- }
+  PinIcon,
+  MapPinIconMuseum,
+  PinIconMuseum
+}

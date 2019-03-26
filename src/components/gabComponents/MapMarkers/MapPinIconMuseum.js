@@ -7,10 +7,10 @@ const IconSvgRAW = styled.svg`
   height: 30px;
   width: 30px;
   opacity: 1;
-  fill: chocolate;
+  fill: #9e2b25;
 `
 
-const Icon = () => (
+const PinIconMuseum = () => (
   <IconSvgRAW x="0px" y="0px" viewBox="0 0 32 32" preserveAspectRatio="xMinYMin meet">
     <g>
       <g><ellipse cx="16.01" cy="12.484" rx="2.688" ry="2.605"/>
@@ -24,7 +24,7 @@ const Icon = () => (
 
 const MapPinIconMuseum = L.divIcon({
   className: 'map-pin',
-  html: ReactDOMServer.renderToString(<Icon/>)
+  html: ReactDOMServer.renderToString(<PinIconMuseum/>)
 });
 
-export default MapPinIconMuseum;
+export { PinIconMuseum, MapPinIconMuseum }

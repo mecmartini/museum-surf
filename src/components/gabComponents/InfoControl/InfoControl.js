@@ -6,8 +6,10 @@ const dataReference = "1092";
 
 const StyledWrapper = styled.div`
   background: white;
-  border: 1px solid red;
+  border: 1px solid #f1ffe7;
   padding: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(112,183,126,1);
+  border-radius: 4px;
   ul {
     list-style: none outside none;
     padding: 0;

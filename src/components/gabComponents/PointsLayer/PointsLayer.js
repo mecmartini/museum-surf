@@ -4,18 +4,20 @@ import { GeoJSON, Popup, ZoomControl } from 'react-leaflet';
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import styled from 'styled-components'
+import Collapse, { Panel } from 'rc-collapse';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
 import InfoControl from '../InfoControl'
 import './src/L.Control.Center.js'
 
 import 'leaflet/dist/leaflet.css';
+import 'rc-collapse/assets/index.css';
 import './point-layers.min.css';
 
 const StyledButton = styled.button`
   border: none;
   background: #17bebb;
-  color: #f1ffe7;
+  color: #ffffff;
   padding: 5px;
   text-transform: uppercase;
   border: 1px solid #17bebb;
@@ -35,24 +37,31 @@ const LocationLabel = styled.h5`
   text-transform: uppercase;
   color: #0065a2;
   font-weight: bold;
-  min-width: 300px;
+  min-width: 260px;
   font-size: 16px;
   margin-bottom: 0;
+  &.is-museum {
+    color: #9e2b25;
+  }
 `
 
 const CountryButton = styled.button`
   border: none;
   background: #ffffff;
-  color: #9e2b25;
+  color: #0065a2;
   padding: 5px;
   text-transform: uppercase;
-  border: 1px solid #9e2b25;
+  border: 1px solid #0065a2;
   box-sizing: border-box;
   font-weight: bold;
   font-style: italic;
   margin-right: 5px;
   margin-top: 5px;
   margin-bottom: 10px;
+  &.is-museum {
+    color: #9e2b25;
+    border: 1px solid #9e2b25;
+  }
   :hover {
     cursor: pointer;
   }
@@ -69,8 +78,49 @@ const CategoryButton = styled.button`
   font-weight: bold;
   margin-right: 5px;
   margin-bottom: 5px;
+  &.is-museum {
+    background: #9e2b25;
+    border: 1px solid #9e2b25;
+  }
   :hover {
     cursor: pointer;
+  }
+`
+
+const StyledCollapse = styled(Collapse)`
+  &.rc-collapse {
+    > .rc-collapse-item {
+      > .rc-collapse-header {
+        background: #17bebb;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 2px 10px;
+        .arrow {
+          border-left-color: #ffffff;
+        }
+      }
+
+      > .rc-collapse-content {
+        padding: 0 10px;
+        > .rc-collapse-content-box {
+          margin: 10px 0 5px;
+        }
+      }
+    }
+
+    > .rc-collapse-item-active {
+      > .rc-collapse-header {
+        background: #17bebb;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        .arrow {
+          border-top-color: #ffffff;
+          border-left-color: transparent;
+        }
+      }
+    }
   }
 `
 
@@ -89,6 +139,7 @@ class PointsLayer extends Component {
       image: null,
       location: null,
       category: null,
+      isMuseum: null,
       hashtag: null,
       country: null,
       showMuseumPics: true,
@@ -143,6 +194,17 @@ class PointsLayer extends Component {
     this.setState({ categories: categoriesUpdated })
   }
 
+  handleCategoriesDeselectAllClick = (e) => {
+    this.countVisible = 0;
+    const { categories } = this.state;
+    const categoriesUpdated = categories.map(item => {
+      item.status = false
+
+      return item
+    })
+    this.setState({ categories: categoriesUpdated })
+  }
+
   handleCountriesClick = (e) => {
     this.countVisible = 0;
     const value = e.target.value;
@@ -161,6 +223,17 @@ class PointsLayer extends Component {
     const { countries } = this.state;
     const countriesUpdated = countries.map(item => {
       item.status = true
+
+      return item
+    })
+    this.setState({ countries: countriesUpdated, countrySelected: null })
+  }
+
+  handleCountriesDeselectAllClick = (e) => {
+    this.countVisible = 0;
+    const { countries } = this.state;
+    const countriesUpdated = countries.map(item => {
+      item.status = false
 
       return item
     })
@@ -191,12 +264,14 @@ class PointsLayer extends Component {
 
   handleClick = (e) => {
     const featureProps = e.sourceTarget.feature.properties;
+    console.log(featureProps)
     this.setState({
       image: featureProps.image,
       location: featureProps.location,
       hashtag: featureProps.hashtags,
       country: featureProps.country,
       category: featureProps.category,
+      isMuseum: featureProps.museum,
     })
   }
 
@@ -207,6 +282,7 @@ class PointsLayer extends Component {
       hashtag: null,
       country: null,
       category: null,
+      isMuseum: null,
     })
   }
 
@@ -371,9 +447,11 @@ class PointsLayer extends Component {
 
   render() {
     const {
+      map,
       data,
       image,
       location,
+      isMuseum,
       hashtag,
       country,
       category,
@@ -389,6 +467,8 @@ class PointsLayer extends Component {
       countrySelected,
       countries,
     } = this.state;
+
+    console.log(map)
 
     const imgStyle = {
       width: "100%",
@@ -453,28 +533,35 @@ class PointsLayer extends Component {
             )}
             pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
           >
-            <Popup onClose={this.handlePopupClose}>
-              <LocationLabel>{location}</LocationLabel>
-              <CountryButton value={country} onClick={this.handlePointCountryClick}>{country + ' + '}</CountryButton>
+            <Popup onClose={this.handlePopupClose} className={isMuseum ? 'is-museum' : 'is-not-museum'}>
+              <LocationLabel className={isMuseum ? 'is-museum' : 'is-not-museum'}>{location}</LocationLabel>
+              <CountryButton className={isMuseum ? 'is-museum' : 'is-not-museum'} value={country} onClick={this.handlePointCountryClick}>{country + ' + '}</CountryButton>
               <br />
               <img style={imgStyle} src={image} alt={location} />
-              <CategoryButton value={category} onClick={this.handlePointCategoryClick}>{category + ' + '}</CategoryButton>
+              <CategoryButton className={isMuseum ? 'is-museum' : 'is-not-museum'} value={category} onClick={this.handlePointCategoryClick}>{category + ' + '}</CategoryButton>
               {hashtag &&
-                <div>
-                  {
-                    hashtag.map(
-                      (item, key) =>
-                        <StyledButton key={key} value={item} onClick={this.handlePointHashtagClick}>
-                          {item}
-                        </StyledButton>
-                    )
-                  }
-                </div>
+                <StyledCollapse
+                  accordion={false}
+                >
+                  <Panel
+                    header={"#Hashtags"}
+                  >
+                    {
+                      hashtag.map(
+                        (item, key) =>
+                          <StyledButton key={key} value={item} onClick={this.handlePointHashtagClick}>
+                            {item}
+                          </StyledButton>
+                      )
+                    }
+                  </Panel>
+                </StyledCollapse>
               }
             </Popup>
           </GeoJSON>
 
           <LayersControl
+            map={map}
             toggleShowMuseum={this.toggleShowMuseum}
             toggleShowNotMuseum={this.toggleShowNotMuseum}
             museumVisible={showMuseumPics}
@@ -482,9 +569,11 @@ class PointsLayer extends Component {
             categories={categories}
             handleCategoriesClick={this.handleCategoriesClick}
             handleCategoriesSelectAllClick={this.handleCategoriesSelectAllClick}
+            handleCategoriesDeselectAllClick={this.handleCategoriesDeselectAllClick}
             countries={countries}
             handleCountriesClick={this.handleCountriesClick}
             handleCountriesSelectAllClick={this.handleCountriesSelectAllClick}
+            handleCountriesDeselectAllClick={this.handleCountriesDeselectAllClick}
           />
 
           <InfoControl
