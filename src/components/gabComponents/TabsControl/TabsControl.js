@@ -32,7 +32,6 @@ const StyledWrapper = styled.div`
   .react-tabs__tab-panel {
     padding: 10px 15px;
     border-top: 2px solid #0065a2;
-    border-radius: 10px;
   }
 `
 

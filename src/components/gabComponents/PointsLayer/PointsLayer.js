@@ -155,6 +155,7 @@ class PointsLayer extends Component {
       totalIsNotMuseum: 0,
       percentageMuseum: null,
       percentageNotMuseum: null,
+      categorySelected: null,
       categories: [],
       catLoaded: false,
       countrySelected: null,
@@ -230,7 +231,7 @@ class PointsLayer extends Component {
       }
       return item
     })
-    this.setState({ categories: categoriesUpdated })
+    this.setState({ categories: categoriesUpdated, categorySelected: null })
   }
 
   handleCategoriesSelectAllClick = (e) => {
@@ -241,7 +242,7 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ categories: categoriesUpdated })
+    this.setState({ categories: categoriesUpdated, categorySelected: null })
   }
 
   handleCategoriesDeselectAllClick = (e) => {
@@ -252,7 +253,7 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ categories: categoriesUpdated })
+    this.setState({ categories: categoriesUpdated, categorySelected: null })
   }
 
   handleCountriesClick = (e) => {
@@ -328,7 +329,7 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ categories: categoriesUpdated })
+    this.setState({ categorySelected: e.target.value, categories: categoriesUpdated })
   }
 
   handlePointCountryClick = (e) => {
@@ -517,6 +518,7 @@ class PointsLayer extends Component {
       totalIsNotMuseum,
       percentageMuseum,
       percentageNotMuseum,
+      categorySelected,
       categories,
       countrySelected,
       countries,
@@ -565,7 +567,7 @@ class PointsLayer extends Component {
         )
       }
 
-      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${countrySelected}_${catKey}_${countryKey}`
+      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${categorySelected}_${countrySelected}_${catKey}_${countryKey}`
 
       return (
         <Fragment>
@@ -635,6 +637,7 @@ class PointsLayer extends Component {
             percentageMuseum={percentageMuseum}
             percentageNotMuseum={percentageNotMuseum}
             countrySelected={countrySelected}
+            categorySelected={categorySelected}
           />
 
           <ZoomControl position="topcenter" />
