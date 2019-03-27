@@ -375,7 +375,16 @@ class PointsLayer extends Component {
       })
     });
 
-    return list
+    list.sort(this.sortHashtagsList);
+
+    return list.slice(0, 10);
+  }
+
+  sortHashtagsList (a, b){
+    if (a.value < b.value) return 1;
+    if (b.value >= a.value) return -1;
+
+    return 0;
   }
 
   componentDidMount() {
