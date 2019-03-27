@@ -1,4 +1,4 @@
-import React, { createRef, forwardRef, Component } from 'react';
+import React, { createRef, Component } from 'react';
 import { Map } from 'react-leaflet';
 import styled from "styled-components";
 import BaseMap from '../BaseMap';
@@ -26,12 +26,6 @@ const bounds = [
 class MainContainer extends Component {
   mapRef = createRef();
 
-  constructor(props) {
-    super(props)
-    this.mapRef = createRef();
-    console.log(this.mapRef)
-  }
-
   render() {
     return (
       <div className="MainContainer">
@@ -42,7 +36,7 @@ class MainContainer extends Component {
         >
           <BaseMap/>
 
-          <PointsLayer map={el => this.mapRef = el}/>
+          <PointsLayer/>
         </MapStyled>
       </div>
     )

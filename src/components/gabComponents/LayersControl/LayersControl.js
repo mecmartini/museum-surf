@@ -1,5 +1,4 @@
-import React, { Component, createRef } from 'react'
-import L from 'leaflet';
+import React, { Component } from 'react'
 import styled from 'styled-components'
 import Control from '@skyeer/react-leaflet-custom-control'
 import TabsControl from '../TabsControl'
@@ -70,15 +69,8 @@ const StyledButton = styled.button`
 `
 
 class LayersControl extends Component {
-  controlRef = createRef();
-
-  componentDidMount() {
-    //L.DomEvent.on(this.props.map.leafletElement, 'scroll', this.createPopupsHandler);
-  }
-
   render() {
     const {
-      map,
       toggleShowMuseum,
       toggleShowNotMuseum,
       museumVisible,
@@ -92,13 +84,10 @@ class LayersControl extends Component {
       handleCountriesSelectAllClick,
       handleCountriesDeselectAllClick,
     } = this.props
-    console.log('MAP REF')
-    console.log(map)
 
     return(
-      <Control
-        position="topleft">
-        <StyledWrapper ref={this.controlRef}>
+      <Control position="topleft">
+        <StyledWrapper>
           <StyledButton
             className={museumVisible ? 'active btn-museum' : 'btn-museum'}
             onClick={toggleShowMuseum}

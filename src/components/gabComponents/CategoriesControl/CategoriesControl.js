@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import L from 'leaflet';
 import styled from 'styled-components'
 
 const StyledList = styled.ul`
@@ -8,7 +9,7 @@ const StyledList = styled.ul`
   max-height: calc(100vh - 202px);
   overflow: scroll;
   li {
-    margin: 0;
+    margin: 0 0 5px;
     background: #0065a2;
     opacity: .8;
     &:last-child {
@@ -82,6 +83,12 @@ const StyledButton = styled.button`
 
 class CategoriesControl extends Component {
 
+  componentDidMount() {
+    const elem = L.DomUtil.get('categories-list');
+    L.DomEvent.on(elem, 'mousewheel', L.DomEvent.stopPropagation);
+    L.DomEvent.on(elem, 'scroll', L.DomEvent.stopPropagation);
+  }
+
   render() {
     const {
       categories,
@@ -131,7 +138,7 @@ class CategoriesControl extends Component {
         >
           Deselect All
         </StyledButton>
-        <StyledList>
+        <StyledList id="categories-list">
           {categories.map((item, k) => (
             <li key={k} className={item.status ? 'active' : ''}>
               <StyledButton

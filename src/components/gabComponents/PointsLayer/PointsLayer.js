@@ -126,10 +126,18 @@ const StyledCollapse = styled(Collapse)`
 
 class PointsLayer extends Component {
   countVisible = 0;
+
   categories = new Set();
   categoriesCount = {};
+
   countries = new Set();
   countriesCount = {};
+
+  categoriesHashtags = new Set();
+  categoriesHashtagsCount = {};
+
+  countriesHashtags = new Set();
+  countriesHashtagsCount = {};
 
   constructor(props) {
     super(props);
@@ -150,11 +158,17 @@ class PointsLayer extends Component {
       totalIsNotMuseum: 0,
       percentageMuseum: null,
       percentageNotMuseum: null,
-      catLoaded: false,
       categories: [],
+      catLoaded: false,
       countrySelected: null,
       countries: [],
       countriesLoaded: false,
+
+      categoriesHashtags: [],
+      categoriesHashtagsLoaded: false,
+
+      countriesHashtags: [],
+      countriesHashtagsLoaded: false,
     }
   }
 
@@ -447,7 +461,6 @@ class PointsLayer extends Component {
 
   render() {
     const {
-      map,
       data,
       image,
       location,
@@ -467,8 +480,6 @@ class PointsLayer extends Component {
       countrySelected,
       countries,
     } = this.state;
-
-    console.log(map)
 
     const imgStyle = {
       width: "100%",
@@ -561,7 +572,6 @@ class PointsLayer extends Component {
           </GeoJSON>
 
           <LayersControl
-            map={map}
             toggleShowMuseum={this.toggleShowMuseum}
             toggleShowNotMuseum={this.toggleShowNotMuseum}
             museumVisible={showMuseumPics}
