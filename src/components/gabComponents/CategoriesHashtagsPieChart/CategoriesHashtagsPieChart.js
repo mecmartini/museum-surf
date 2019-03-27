@@ -3,6 +3,15 @@ import Highcharts from 'highcharts';
 import {
   HighchartsChart, withHighcharts, PieSeries, Tooltip, Legend, Title
 } from 'react-jsx-highcharts';
+import styled from 'styled-components'
+
+const EmptyLabel = styled.div`
+  text-transform: uppercase;
+  font-size: 14px;
+  color: #0065a2;
+  font-style: italic;
+  text-align: center;
+`
 
 class CategoriesHashtagsPieChart extends Component {
 
@@ -47,7 +56,9 @@ class CategoriesHashtagsPieChart extends Component {
     }
 
     return(
-      null
+      <EmptyLabel>
+        Select a category
+      </EmptyLabel>
     );
   }
 }

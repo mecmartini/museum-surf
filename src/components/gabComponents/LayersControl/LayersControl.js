@@ -13,6 +13,10 @@ const StyledWrapper = styled.div`
   border-radius: 4px;
 `
 
+const ButtonWrapper = styled.div`
+  text-align: center;
+`
+
 const StyledButton = styled.button`
   background: transparent;
   padding: 5px;
@@ -88,21 +92,23 @@ class LayersControl extends Component {
     return(
       <Control position="topleft">
         <StyledWrapper>
-          <StyledButton
-            className={museumVisible ? 'active btn-museum' : 'btn-museum'}
-            onClick={toggleShowMuseum}
-          >
-            <PinIconMuseum/>
-            <span>Located in Museum</span>
-          </StyledButton>
+          <ButtonWrapper>
+            <StyledButton
+              className={museumVisible ? 'active btn-museum' : 'btn-museum'}
+              onClick={toggleShowMuseum}
+            >
+              <PinIconMuseum/>
+              <span>Located in Museum</span>
+            </StyledButton>
 
-          <StyledButton
-            className={notMuseumVisible ? 'active btn-not-museum' : 'btn-not-museum'}
-            onClick={toggleShowNotMuseum}
-          >
-            <PinIcon/>
-            <span>Not Located in Museum</span>
-          </StyledButton>
+            <StyledButton
+              className={notMuseumVisible ? 'active btn-not-museum' : 'btn-not-museum'}
+              onClick={toggleShowNotMuseum}
+            >
+              <PinIcon/>
+              <span>Not Located in Museum</span>
+            </StyledButton>
+          </ButtonWrapper>
 
           <TabsControl
             categories={categories}

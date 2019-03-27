@@ -8,7 +8,6 @@ import Collapse, { Panel } from 'rc-collapse';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
 import InfoControl from '../InfoControl'
-import ChartsControl from '../ChartsControl'
 import './src/L.Control.Center.js'
 
 import 'leaflet/dist/leaflet.css';
@@ -637,8 +636,6 @@ class PointsLayer extends Component {
             percentageNotMuseum={percentageNotMuseum}
             countrySelected={countrySelected}
           />
-
-          <ChartsControl />
 
           <ZoomControl position="topcenter" />
         </Fragment>

@@ -3,6 +3,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import styled from 'styled-components'
 import CategoriesControl from '../CategoriesControl'
 import CountriesControl from '../CountriesControl'
+import CategoriesHashtagsPieChart from '../CategoriesHashtagsPieChart'
+import CountriesHashtagsPieChart from '../CountriesHashtagsPieChart'
 
 import "react-tabs/style/react-tabs.css";
 
@@ -54,6 +56,8 @@ class TabsControl extends Component {
           <TabList>
             <Tab>Categories</Tab>
             <Tab>Countries</Tab>
+            <Tab>Category Hashtags</Tab>
+            <Tab>Country Hashtags</Tab>
           </TabList>
 
           <TabPanel>
@@ -71,6 +75,12 @@ class TabsControl extends Component {
               handleCountriesSelectAllClick={handleCountriesSelectAllClick}
               handleCountriesDeselectAllClick={handleCountriesDeselectAllClick}
             />
+          </TabPanel>
+          <TabPanel>
+            <CategoriesHashtagsPieChart />
+          </TabPanel>
+          <TabPanel>
+            <CountriesHashtagsPieChart />
           </TabPanel>
         </Tabs>
       </StyledWrapper>
