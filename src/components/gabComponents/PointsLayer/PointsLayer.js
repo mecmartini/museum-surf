@@ -161,6 +161,7 @@ class PointsLayer extends Component {
       countrySelected: null,
       countries: [],
       countriesLoaded: false,
+      tabIndex: 0,
     }
   }
 
@@ -219,6 +220,10 @@ class PointsLayer extends Component {
     const { showNotMuseumPics } = this.state
     this.countVisible = 0;
     this.setState({ showNotMuseumPics: !showNotMuseumPics, count: 0 })
+  }
+
+  handleTabChange = (index) => {
+    this.setState({ tabIndex: index })
   }
 
   handleCategoriesClick = (e) => {
@@ -329,7 +334,7 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ categorySelected: e.target.value, categories: categoriesUpdated })
+    this.setState({ categorySelected: e.target.value, categories: categoriesUpdated, tabIndex: 2 })
   }
 
   handlePointCountryClick = (e) => {
@@ -347,7 +352,7 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ countrySelected: e.target.value, countries: countriesUpdated })
+    this.setState({ countrySelected: e.target.value, countries: countriesUpdated, tabIndex: 3 })
   }
 
   handlePointHashtagClick = (e) => {
@@ -469,8 +474,6 @@ class PointsLayer extends Component {
           hashtags: this.categoriesHashtagsCount[item] === undefined ? [] : this.getHashtagsList(this.categoriesHashtagsCount[item])
         }
       ))
-      console.log('CATEGORIES')
-      console.log(categoriesWithStatus)
 
       this.setState({
         catLoaded: true,
@@ -491,8 +494,6 @@ class PointsLayer extends Component {
           hashtags: this.countriesHashtagsCount[item] === undefined ? [] : this.getHashtagsList(this.countriesHashtagsCount[item])
         }
       ))
-      console.log('COUNTRIES')
-      console.log(countriesWithStatus)
 
       this.setState({
         countriesLoaded: true,
@@ -522,6 +523,7 @@ class PointsLayer extends Component {
       categories,
       countrySelected,
       countries,
+      tabIndex,
     } = this.state;
 
     const imgStyle = {
@@ -627,6 +629,10 @@ class PointsLayer extends Component {
             handleCountriesClick={this.handleCountriesClick}
             handleCountriesSelectAllClick={this.handleCountriesSelectAllClick}
             handleCountriesDeselectAllClick={this.handleCountriesDeselectAllClick}
+            categorySelected={categorySelected}
+            countrySelected={countrySelected}
+            tabIndex={tabIndex}
+            handleTabChange={this.handleTabChange}
           />
 
           <InfoControl
@@ -636,8 +642,8 @@ class PointsLayer extends Component {
             totalIsNotMuseum={totalIsNotMuseum}
             percentageMuseum={percentageMuseum}
             percentageNotMuseum={percentageNotMuseum}
-            countrySelected={countrySelected}
             categorySelected={categorySelected}
+            countrySelected={countrySelected}
           />
 
           <ZoomControl position="topcenter" />

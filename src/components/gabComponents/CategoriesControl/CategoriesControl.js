@@ -32,18 +32,18 @@ const StyledButton = styled.button`
   font-weight: bold;
   width: 100%;
   text-align: left;
-  background: -moz-linear-gradient(left, #9e2b25 0%, #9e2b25 ${props => props.percentage}%, transparent ${props => props.percentage + 0.1}%, transparent 100%);
-  background: -webkit-linear-gradient(left, #9e2b25 0%,#9e2b25 ${props => props.percentage}%,transparent ${props => props.percentage + 0.1}%,transparent 100%);
-  background: linear-gradient(to right, #9e2b25 0%,#9e2b25 ${props => props.percentage}%,transparent ${props => props.percentage + 0.1}%,transparent 100%);
+  background: -moz-linear-gradient(left, #9e2b25 0%, #9e2b25 calc(${props => props.percentage}%), transparent calc(${props => props.percentage + 0.1}%), transparent 100%);
+  background: -webkit-linear-gradient(left, #9e2b25 0%,#9e2b25 calc(${props => props.percentage}%),transparent calc(${props => props.percentage + 0.1}%),transparent 100%);
+  background: linear-gradient(to right, #9e2b25 0%,#9e2b25 calc(${props => props.percentage}%),transparent calc(${props => props.percentage + 0.1}%),transparent 100%);
   &:hover {
     cursor: pointer;
   }
   &.active,
   &.active:hover {
     border: 1px solid #0065a2;
-    background: -moz-linear-gradient(left, #70b77e 0%, #70b77e ${props => props.percentage}%, transparent ${props => props.percentage + 0.1}%, transparent 100%);
-    background: -webkit-linear-gradient(left, #70b77e 0%,#70b77e ${props => props.percentage}%,transparent ${props => props.percentage + 0.1}%,transparent 100%);
-    background: linear-gradient(to right, #70b77e 0%,#70b77e ${props => props.percentage}%,transparent ${props => props.percentage + 0.1}%,transparent 100%);
+    background: -moz-linear-gradient(left, #70b77e 0%, #70b77e calc(${props => props.percentage}%), transparent calc(${props => props.percentage + 0.1}%), transparent 100%);
+    background: -webkit-linear-gradient(left, #70b77e 0%,#70b77e calc(${props => props.percentage}%),transparent calc(${props => props.percentage + 0.1}%),transparent 100%);
+    background: linear-gradient(to right, #70b77e 0%,#70b77e calc(${props => props.percentage}%),transparent calc(${props => props.percentage + 0.1}%),transparent 100%);
   }
   &.btn {
     background: transparent;

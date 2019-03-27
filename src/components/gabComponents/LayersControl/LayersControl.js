@@ -87,6 +87,10 @@ class LayersControl extends Component {
       handleCountriesClick,
       handleCountriesSelectAllClick,
       handleCountriesDeselectAllClick,
+      categorySelected,
+      countrySelected,
+      tabIndex,
+      handleTabChange
     } = this.props
 
     return(
@@ -111,6 +115,8 @@ class LayersControl extends Component {
           </ButtonWrapper>
 
           <TabsControl
+            tabIndex={tabIndex}
+            handleTabChange={handleTabChange}
             categories={categories}
             handleCategoriesClick={handleCategoriesClick}
             handleCategoriesSelectAllClick={handleCategoriesSelectAllClick}
@@ -119,6 +125,8 @@ class LayersControl extends Component {
             handleCountriesClick={handleCountriesClick}
             handleCountriesSelectAllClick={handleCountriesSelectAllClick}
             handleCountriesDeselectAllClick={handleCountriesDeselectAllClick}
+            categorySelected={categorySelected}
+            countrySelected={countrySelected}
           />
         </StyledWrapper>
       </Control>

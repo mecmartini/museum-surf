@@ -36,7 +36,6 @@ const StyledWrapper = styled.div`
 `
 
 class TabsControl extends Component {
-
   render() {
     const {
       categories,
@@ -47,11 +46,15 @@ class TabsControl extends Component {
       handleCountriesClick,
       handleCountriesSelectAllClick,
       handleCountriesDeselectAllClick,
+      categorySelected,
+      countrySelected,
+      tabIndex,
+      handleTabChange,
     } = this.props
 
     return(
       <StyledWrapper>
-        <Tabs forceRenderTabPanel={true}>
+        <Tabs forceRenderTabPanel={true} selectedIndex={tabIndex} onSelect={tabIndex => handleTabChange(tabIndex)}>
           <TabList>
             <Tab>Categories</Tab>
             <Tab>Countries</Tab>
@@ -76,10 +79,16 @@ class TabsControl extends Component {
             />
           </TabPanel>
           <TabPanel>
-            <CategoriesHashtagsPieChart />
+            <CategoriesHashtagsPieChart
+              categorySelected={categorySelected}
+              handleTabCategoryHashtagsChange={this.handleTabCategoryHashtagsChange}
+            />
           </TabPanel>
           <TabPanel>
-            <CountriesHashtagsPieChart />
+            <CountriesHashtagsPieChart
+              countrySelected={countrySelected}
+              handleTabCountryHashtagsChange={this.handleTabCountryHashtagsChange}
+            />
           </TabPanel>
         </Tabs>
       </StyledWrapper>

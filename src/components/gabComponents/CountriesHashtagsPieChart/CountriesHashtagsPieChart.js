@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Highcharts from 'highcharts';
 import {
-  HighchartsChart, withHighcharts, PieSeries, Tooltip, Legend, Title
+  HighchartsChart, withHighcharts, PieSeries, Tooltip, Legend, Title, Subtitle
 } from 'react-jsx-highcharts';
 import styled from 'styled-components'
 
@@ -16,9 +16,10 @@ const EmptyLabel = styled.div`
 class CountriesHashtagsPieChart extends Component {
 
   render() {
-    const title = "Country Top Hashtags";
+    const { countrySelected } = this.props;
+    const title = `${countrySelected} Top 10 Hashtags`;
 
-    if (true) {
+    if (countrySelected) {
       const chartOptions = {
         plotOptions: {
           pie: {
@@ -44,7 +45,8 @@ class CountriesHashtagsPieChart extends Component {
 
       return (
         <HighchartsChart {...chartOptions} className="countries-hashtags-pie-chart">
-          <Title>{title}</Title>
+          <Title>{countrySelected}</Title>
+          <Subtitle>Top 10 Hashtags</Subtitle>
 
           <Legend layout={'horizontal'} itemDistance={5} margin={5} />
 
@@ -57,7 +59,7 @@ class CountriesHashtagsPieChart extends Component {
 
     return(
       <EmptyLabel>
-        Select a category
+        Select a country
       </EmptyLabel>
     );
   }
