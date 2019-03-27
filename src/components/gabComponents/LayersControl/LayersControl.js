@@ -58,7 +58,8 @@ const StyledButton = styled.button`
   & svg {
     display: inline-block;
     vertical-align: middle;
-    height: 25px;
+    height: 20px;
+    width: 22px;
   }
   & span {
     display: inline-block;
