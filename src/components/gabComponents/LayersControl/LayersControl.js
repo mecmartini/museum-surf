@@ -88,7 +88,9 @@ class LayersControl extends Component {
       handleCountriesSelectAllClick,
       handleCountriesDeselectAllClick,
       categorySelected,
+      categorySelectedHashtags,
       countrySelected,
+      countrySelectedHashtags,
       tabIndex,
       handleTabChange
     } = this.props
@@ -126,7 +128,9 @@ class LayersControl extends Component {
             handleCountriesSelectAllClick={handleCountriesSelectAllClick}
             handleCountriesDeselectAllClick={handleCountriesDeselectAllClick}
             categorySelected={categorySelected}
+            categorySelectedHashtags={categorySelectedHashtags}
             countrySelected={countrySelected}
+            countrySelectedHashtags={countrySelectedHashtags}
           />
         </StyledWrapper>
       </Control>

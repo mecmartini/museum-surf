@@ -16,10 +16,18 @@ const EmptyLabel = styled.div`
 class CountriesHashtagsPieChart extends Component {
 
   render() {
-    const { countrySelected } = this.props;
+    const { countrySelected, countrySelectedHashtags } = this.props;
     const title = `${countrySelected} Top 10 Hashtags`;
 
     if (countrySelected) {
+      if (!countrySelectedHashtags.length) {
+        return(
+          <EmptyLabel>
+            The selected country has no hashtags
+          </EmptyLabel>
+        );
+      }
+
       const chartOptions = {
         plotOptions: {
           pie: {
@@ -32,16 +40,7 @@ class CountriesHashtagsPieChart extends Component {
         }
       };
 
-      const pieData = [{
-        name: 'Country HASH 1',
-        y: 60
-      }, {
-        name: 'Country HASH 2',
-        y: 200
-      }, {
-        name: 'Country HASH 3',
-        y: 135
-      }];
+      const pieData = countrySelectedHashtags
 
       return (
         <HighchartsChart {...chartOptions} className="countries-hashtags-pie-chart">
@@ -59,7 +58,7 @@ class CountriesHashtagsPieChart extends Component {
 
     return(
       <EmptyLabel>
-        Select a country
+        Select a single country...
       </EmptyLabel>
     );
   }

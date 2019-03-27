@@ -16,10 +16,18 @@ const EmptyLabel = styled.div`
 class CategoriesHashtagsPieChart extends Component {
 
   render() {
-    const { categorySelected } = this.props;
+    const { categorySelected, categorySelectedHashtags } = this.props;
     const title = `${categorySelected} Top 10 Hashtags`;
 
     if (categorySelected) {
+      if (!categorySelectedHashtags.length) {
+        return(
+          <EmptyLabel>
+            The selected category has no hashtags
+          </EmptyLabel>
+        );
+      }
+
       const chartOptions = {
         plotOptions: {
           pie: {
@@ -32,16 +40,7 @@ class CategoriesHashtagsPieChart extends Component {
         }
       };
 
-      const pieData = [{
-        name: 'Category HASH 1',
-        y: 10
-      }, {
-        name: 'Category HASH 2',
-        y: 100
-      }, {
-        name: 'Category HASH 3',
-        y: 35
-      }];
+      const pieData = categorySelectedHashtags;
 
       return (
         <HighchartsChart {...chartOptions} className="categories-hashtags-pie-chart">
@@ -59,7 +58,7 @@ class CategoriesHashtagsPieChart extends Component {
 
     return(
       <EmptyLabel>
-        Select a category
+        Select a single category...
       </EmptyLabel>
     );
   }

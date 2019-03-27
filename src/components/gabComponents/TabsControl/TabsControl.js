@@ -47,7 +47,9 @@ class TabsControl extends Component {
       handleCountriesSelectAllClick,
       handleCountriesDeselectAllClick,
       categorySelected,
+      categorySelectedHashtags,
       countrySelected,
+      countrySelectedHashtags,
       tabIndex,
       handleTabChange,
     } = this.props
@@ -81,12 +83,14 @@ class TabsControl extends Component {
           <TabPanel>
             <CategoriesHashtagsPieChart
               categorySelected={categorySelected}
+              categorySelectedHashtags={categorySelectedHashtags}
               handleTabCategoryHashtagsChange={this.handleTabCategoryHashtagsChange}
             />
           </TabPanel>
           <TabPanel>
             <CountriesHashtagsPieChart
               countrySelected={countrySelected}
+              countrySelectedHashtags={countrySelectedHashtags}
               handleTabCountryHashtagsChange={this.handleTabCountryHashtagsChange}
             />
           </TabPanel>

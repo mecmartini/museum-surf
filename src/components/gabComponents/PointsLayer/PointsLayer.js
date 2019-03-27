@@ -156,9 +156,11 @@ class PointsLayer extends Component {
       percentageMuseum: null,
       percentageNotMuseum: null,
       categorySelected: null,
+      categorySelectedHashtags: null,
       categories: [],
       catLoaded: false,
       countrySelected: null,
+      countrySelectedHashtags: null,
       countries: [],
       countriesLoaded: false,
       tabIndex: 0,
@@ -236,7 +238,7 @@ class PointsLayer extends Component {
       }
       return item
     })
-    this.setState({ categories: categoriesUpdated, categorySelected: null })
+    this.setState({ categories: categoriesUpdated, categorySelected: null, categorySelectedHashtags: null })
   }
 
   handleCategoriesSelectAllClick = (e) => {
@@ -247,7 +249,7 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ categories: categoriesUpdated, categorySelected: null })
+    this.setState({ categories: categoriesUpdated, categorySelected: null, categorySelectedHashtags: null })
   }
 
   handleCategoriesDeselectAllClick = (e) => {
@@ -258,7 +260,7 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ categories: categoriesUpdated, categorySelected: null })
+    this.setState({ categories: categoriesUpdated, categorySelected: null, categorySelectedHashtags: null })
   }
 
   handleCountriesClick = (e) => {
@@ -334,7 +336,26 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ categorySelected: e.target.value, categories: categoriesUpdated, tabIndex: 2 })
+
+    const hashtags = categoriesUpdated.reduce(
+      (hashtags, item) => {
+        let items = [];
+
+        if(Array.isArray(hashtags) && hashtags.length) {
+          items = hashtags;
+        }
+        else if(typeof hashtags === 'object' && hashtags.name === cat) {
+          items = hashtags.hashtags;
+        }
+        else if (item.name === cat) {
+          items = item.hashtags;
+        }
+
+        return items;
+      }
+    )
+
+    this.setState({ categorySelected: cat, categories: categoriesUpdated, tabIndex: 2, categorySelectedHashtags: hashtags })
   }
 
   handlePointCountryClick = (e) => {
@@ -352,7 +373,26 @@ class PointsLayer extends Component {
 
       return item
     })
-    this.setState({ countrySelected: e.target.value, countries: countriesUpdated, tabIndex: 3 })
+
+    const hashtags = countriesUpdated.reduce(
+      (hashtags, item) => {
+        let items = [];
+
+        if(Array.isArray(hashtags) && hashtags.length) {
+          items = hashtags;
+        }
+        else if(typeof hashtags === 'object' && hashtags.name === country) {
+          items = hashtags.hashtags;
+        }
+        else if (item.name === country) {
+          items = item.hashtags;
+        }
+
+        return items;
+      }
+    )
+
+    this.setState({ countrySelected: e.target.value, countries: countriesUpdated, tabIndex: 3, countrySelectedHashtags: hashtags })
   }
 
   handlePointHashtagClick = (e) => {
@@ -376,7 +416,7 @@ class PointsLayer extends Component {
     Object.entries(item).forEach(entry => {
       list.push({
         name: entry[0],
-        value: entry[1]
+        y: Number.parseInt(entry[1])
       })
     });
 
@@ -520,8 +560,10 @@ class PointsLayer extends Component {
       percentageMuseum,
       percentageNotMuseum,
       categorySelected,
+      categorySelectedHashtags,
       categories,
       countrySelected,
+      countrySelectedHashtags,
       countries,
       tabIndex,
     } = this.state;
@@ -630,7 +672,9 @@ class PointsLayer extends Component {
             handleCountriesSelectAllClick={this.handleCountriesSelectAllClick}
             handleCountriesDeselectAllClick={this.handleCountriesDeselectAllClick}
             categorySelected={categorySelected}
+            categorySelectedHashtags={categorySelectedHashtags}
             countrySelected={countrySelected}
+            countrySelectedHashtags={countrySelectedHashtags}
             tabIndex={tabIndex}
             handleTabChange={this.handleTabChange}
           />
