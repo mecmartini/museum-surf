@@ -15,9 +15,7 @@ class CategoriesHashtagsPieChart extends Component {
           pie: {
               cursor: 'pointer',
               dataLabels: {
-                  enabled: true,
-                  format: '<span style="color:{point.color};">{point.name}: <b style="color:{point.color};>{point.percentage:.1f} %</b></span>',
-                  color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                  enabled: false,
               },
               showInLegend: true,
           }
@@ -39,7 +37,7 @@ class CategoriesHashtagsPieChart extends Component {
         <HighchartsChart {...chartOptions} className="categories-hashtags-pie-chart">
           <Title>{title}</Title>
 
-          <Legend layout={'vertical'} />
+          <Legend layout={'horizontal'} itemDistance={5} margin={5} />
 
           <PieSeries name={title} data={pieData} />
 

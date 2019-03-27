@@ -134,10 +134,7 @@ class PointsLayer extends Component {
   countries = new Set();
   countriesCount = {};
 
-  categoriesHashtags = new Set();
   categoriesHashtagsCount = {};
-
-  countriesHashtags = new Set();
   countriesHashtagsCount = {};
 
   constructor(props) {
@@ -164,10 +161,6 @@ class PointsLayer extends Component {
       countrySelected: null,
       countries: [],
       countriesLoaded: false,
-      categoriesHashtags: [],
-      categoriesHashtagsLoaded: false,
-      countriesHashtags: [],
-      countriesHashtagsLoaded: false,
     }
   }
 
@@ -189,35 +182,27 @@ class PointsLayer extends Component {
     this.countriesCount[country]++;
 
     const hashtags = feature.properties.hashtags;
-    hashtags.forEach((item) => {
-        // Add hashtags per category
-        if (this.categoriesHashtags[category] === undefined) {
-          this.categoriesHashtags[category] = new Set();
-        }
-        this.categoriesHashtags[category].add(item);
+    if (hashtags.length) {
+      hashtags.forEach((item) => {
+          // Add hashtags per category
+          if (this.categoriesHashtagsCount[category] === undefined) {
+            this.categoriesHashtagsCount[category] = {};
+          }
+          if (this.categoriesHashtagsCount[category][item] === undefined) {
+            this.categoriesHashtagsCount[category][item] = 0;
+          }
+          this.categoriesHashtagsCount[category][item]++;
 
-        if (this.categoriesHashtagsCount[category] === undefined) {
-          this.categoriesHashtagsCount[category] = {};
-        }
-        if (this.categoriesHashtagsCount[category][item] === undefined) {
-          this.categoriesHashtagsCount[category][item] = 0;
-        }
-        this.categoriesHashtagsCount[category][item]++;
-
-        // Add hashtags per country
-        if (this.countriesHashtags[country] === undefined) {
-          this.countriesHashtags[country] = new Set();
-        }
-        this.countriesHashtags[country].add(item);
-
-        if (this.countriesHashtagsCount[country] === undefined) {
-          this.countriesHashtagsCount[country] = {};
-        }
-        if (this.countriesHashtagsCount[country][item] === undefined) {
-          this.countriesHashtagsCount[country][item] = 0;
-        }
-        this.countriesHashtagsCount[country][item]++;
-    });
+          // Add hashtags per country
+          if (this.countriesHashtagsCount[country] === undefined) {
+            this.countriesHashtagsCount[country] = {};
+          }
+          if (this.countriesHashtagsCount[country][item] === undefined) {
+            this.countriesHashtagsCount[country][item] = 0;
+          }
+          this.countriesHashtagsCount[country][item]++;
+      });
+    }
 
     layer.on({
         click: this.handleClick,
@@ -308,7 +293,6 @@ class PointsLayer extends Component {
 
   handleClick = (e) => {
     const featureProps = e.sourceTarget.feature.properties;
-    console.log(featureProps)
     this.setState({
       image: featureProps.image,
       location: featureProps.location,
@@ -379,6 +363,19 @@ class PointsLayer extends Component {
     })
     this.setState({ categories: categoriesUpdated })
     */
+  }
+
+  getHashtagsList = (item) => {
+    let list = []
+
+    Object.entries(item).forEach(entry => {
+      list.push({
+        name: entry[0],
+        value: entry[1]
+      })
+    });
+
+    return list
   }
 
   componentDidMount() {
@@ -460,8 +457,11 @@ class PointsLayer extends Component {
           status: true,
           count: (this.categoriesCount[item] !== undefined ? this.categoriesCount[item] : 0),
           percentage: (this.categoriesCount[item] !== undefined ? (this.categoriesCount[item] * 100 / total).toFixed(2) : 0),
+          hashtags: this.categoriesHashtagsCount[item] === undefined ? [] : this.getHashtagsList(this.categoriesHashtagsCount[item])
         }
       ))
+      console.log('CATEGORIES')
+      console.log(categoriesWithStatus)
 
       this.setState({
         catLoaded: true,
@@ -479,34 +479,15 @@ class PointsLayer extends Component {
           status: true,
           count: (this.countriesCount[item] !== undefined ? this.countriesCount[item] : 0),
           percentage: (this.countriesCount[item] !== undefined ? (this.countriesCount[item] * 100 / total).toFixed(2) : 0),
+          hashtags: this.countriesHashtagsCount[item] === undefined ? [] : this.getHashtagsList(this.countriesHashtagsCount[item])
         }
       ))
+      console.log('COUNTRIES')
+      console.log(countriesWithStatus)
 
       this.setState({
         countriesLoaded: true,
         countries: countriesWithStatus,
-      })
-    }
-
-    if (!this.state.categoriesHashtagsLoaded) {
-      console.log('CATEGORIES HASTAGS')
-      console.log(this.categoriesHashtags)
-      console.log(this.categoriesHashtagsCount)
-
-      this.setState({
-        categoriesHashtagsLoaded: true,
-        categoriesHashtags: []
-      })
-    }
-
-    if (!this.state.countriesHashtagsLoaded) {
-      console.log('COUNTRIES HASTAGS')
-      console.log(this.countriesHashtags)
-      console.log(this.countriesHashtagsCount)
-
-      this.setState({
-        countriesHashtagsLoaded: true,
-        countriesHashtags: []
       })
     }
   }
