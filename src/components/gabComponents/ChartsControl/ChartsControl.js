@@ -10,7 +10,7 @@ const StyledWrapper = styled.div`
   padding: 10px;
   box-shadow: 0px 0px 10px 0px rgba(112,183,126,1);
   border-radius: 4px;
-  width: 35vw;
+  width: 30vw;
 `
 
 class ChartsControl extends Component {
