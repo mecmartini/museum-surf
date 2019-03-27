@@ -15,7 +15,7 @@ const StyledWrapper = styled.div`
 
 const StyledButton = styled.button`
   background: transparent;
-  padding: 5px 10px 5px 5px;
+  padding: 5px;
   text-transform: uppercase;
   border: none;
   box-sizing: border-box;
@@ -56,7 +56,6 @@ const StyledButton = styled.button`
     }
   }
   & svg {
-    padding-right: 5px;
     display: inline-block;
     vertical-align: middle;
     height: 25px;
