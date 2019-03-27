@@ -8,6 +8,7 @@ import Collapse, { Panel } from 'rc-collapse';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
 import InfoControl from '../InfoControl'
+import ChartsControl from '../ChartsControl'
 import './src/L.Control.Center.js'
 
 import 'leaflet/dist/leaflet.css';
@@ -163,13 +164,64 @@ class PointsLayer extends Component {
       countrySelected: null,
       countries: [],
       countriesLoaded: false,
-
       categoriesHashtags: [],
       categoriesHashtagsLoaded: false,
-
       countriesHashtags: [],
       countriesHashtagsLoaded: false,
     }
+  }
+
+  onEachFeature = (feature, layer) => {
+    this.countVisible++;
+
+    const category = feature.properties.category;
+    this.categories.add(category);
+    if (this.categoriesCount[category] === undefined) {
+      this.categoriesCount[category] = 0;
+    }
+    this.categoriesCount[category]++;
+
+    const country = feature.properties.country;
+    this.countries.add(country);
+    if (this.countriesCount[country] === undefined) {
+      this.countriesCount[country] = 0;
+    }
+    this.countriesCount[country]++;
+
+    const hashtags = feature.properties.hashtags;
+    hashtags.forEach((item) => {
+        // Add hashtags per category
+        if (this.categoriesHashtags[category] === undefined) {
+          this.categoriesHashtags[category] = new Set();
+        }
+        this.categoriesHashtags[category].add(item);
+
+        if (this.categoriesHashtagsCount[category] === undefined) {
+          this.categoriesHashtagsCount[category] = {};
+        }
+        if (this.categoriesHashtagsCount[category][item] === undefined) {
+          this.categoriesHashtagsCount[category][item] = 0;
+        }
+        this.categoriesHashtagsCount[category][item]++;
+
+        // Add hashtags per country
+        if (this.countriesHashtags[country] === undefined) {
+          this.countriesHashtags[country] = new Set();
+        }
+        this.countriesHashtags[country].add(item);
+
+        if (this.countriesHashtagsCount[country] === undefined) {
+          this.countriesHashtagsCount[country] = {};
+        }
+        if (this.countriesHashtagsCount[country][item] === undefined) {
+          this.countriesHashtagsCount[country][item] = 0;
+        }
+        this.countriesHashtagsCount[country][item]++;
+    });
+
+    layer.on({
+        click: this.handleClick,
+    });
   }
 
   toggleShowMuseum = (e) => {
@@ -252,28 +304,6 @@ class PointsLayer extends Component {
       return item
     })
     this.setState({ countries: countriesUpdated, countrySelected: null })
-  }
-
-  onEachFeature = (feature, layer) => {
-    this.countVisible++;
-
-    const category = feature.properties.category;
-    this.categories.add(category);
-    if (this.categoriesCount[category] === undefined) {
-      this.categoriesCount[category] = 0;
-    }
-    this.categoriesCount[category]++;
-
-    const country = feature.properties.country;
-    this.countries.add(country);
-    if (this.countriesCount[country] === undefined) {
-      this.countriesCount[country] = 0;
-    }
-    this.countriesCount[country]++;
-
-    layer.on({
-        click: this.handleClick,
-    });
   }
 
   handleClick = (e) => {
@@ -457,6 +487,28 @@ class PointsLayer extends Component {
         countries: countriesWithStatus,
       })
     }
+
+    if (!this.state.categoriesHashtagsLoaded) {
+      console.log('CATEGORIES HASTAGS')
+      console.log(this.categoriesHashtags)
+      console.log(this.categoriesHashtagsCount)
+
+      this.setState({
+        categoriesHashtagsLoaded: true,
+        categoriesHashtags: []
+      })
+    }
+
+    if (!this.state.countriesHashtagsLoaded) {
+      console.log('COUNTRIES HASTAGS')
+      console.log(this.countriesHashtags)
+      console.log(this.countriesHashtagsCount)
+
+      this.setState({
+        countriesHashtagsLoaded: true,
+        countriesHashtags: []
+      })
+    }
   }
 
   render() {
@@ -595,6 +647,8 @@ class PointsLayer extends Component {
             percentageNotMuseum={percentageNotMuseum}
             countrySelected={countrySelected}
           />
+
+          <ChartsControl />
 
           <ZoomControl position="topcenter" />
         </Fragment>

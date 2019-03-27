@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
+import L from 'leaflet'
 import styled from 'styled-components'
-import L from 'leaflet';
 
 const StyledList = styled.ul`
   list-style: none outside none;
