@@ -6,6 +6,13 @@ import CountriesControl from '../CountriesControl'
 import CategoriesHashtagsPieChart from '../CategoriesHashtagsPieChart'
 import CountriesHashtagsPieChart from '../CountriesHashtagsPieChart'
 
+import {
+  IconSvgPin,
+  IconSvgCategory,
+  IconSvgHashtagPin,
+  IconSvgHashtagCategory,
+} from '../Icons'
+
 import "react-tabs/style/react-tabs.css";
 
 const StyledWrapper = styled.div`
@@ -26,13 +33,28 @@ const StyledWrapper = styled.div`
         color: #f1ffe7;
         border: 1px solid #0065a2;
         font-weight: bold;
+        svg {
+          fill: #ffffff;
+        }
       }
     }
   }
   .react-tabs__tab-panel {
-    padding: 10px 15px;
-    border-top: 2px solid #0065a2;
+    padding: 0 15px 10px;
+    border: 2px solid #0065a2;
+    border-radius: 8px;
+    margin-top: 1px;
+    background: #f1ffe7;
   }
+`
+
+const TabTitle = styled.h4`
+  color: #0065a2;
+  text-transform: uppercase;
+  text-align: center;
+  background: #f1ffe7;
+  padding: 10px 5px;
+  margin: 0;
 `
 
 class TabsControl extends Component {
@@ -58,13 +80,14 @@ class TabsControl extends Component {
       <StyledWrapper>
         <Tabs forceRenderTabPanel={true} selectedIndex={tabIndex} onSelect={tabIndex => handleTabChange(tabIndex)}>
           <TabList>
-            <Tab>Categories</Tab>
-            <Tab>Countries</Tab>
-            <Tab>Category Hashtags</Tab>
-            <Tab>Country Hashtags</Tab>
+            <Tab><IconSvgCategory/></Tab>
+            <Tab><IconSvgPin/></Tab>
+            <Tab><IconSvgHashtagCategory/></Tab>
+            <Tab><IconSvgHashtagPin/></Tab>
           </TabList>
 
           <TabPanel>
+            <TabTitle>Categories</TabTitle>
             <CategoriesControl
               categories={categories}
               handleCategoriesClick={handleCategoriesClick}
@@ -73,6 +96,7 @@ class TabsControl extends Component {
             />
           </TabPanel>
           <TabPanel>
+            <TabTitle>Countries</TabTitle>
             <CountriesControl
               countries={countries}
               handleCountriesClick={handleCountriesClick}
@@ -81,6 +105,7 @@ class TabsControl extends Component {
             />
           </TabPanel>
           <TabPanel>
+            <TabTitle>Hashtags Category</TabTitle>
             <CategoriesHashtagsPieChart
               categorySelected={categorySelected}
               categorySelectedHashtags={categorySelectedHashtags}
@@ -88,6 +113,7 @@ class TabsControl extends Component {
             />
           </TabPanel>
           <TabPanel>
+            <TabTitle>Hashtags Country</TabTitle>
             <CountriesHashtagsPieChart
               countrySelected={countrySelected}
               countrySelectedHashtags={countrySelectedHashtags}
