@@ -12,7 +12,7 @@ const StyledList = styled.ul`
   overflow-y: scroll;
   li {
     margin: 0 0 5px;
-    opacity: .8;
+    opacity: .7;
     &:last-child {
       margin-bottom: 0;
     }
@@ -85,6 +85,19 @@ const StyledButton = styled.button`
     &:hover {
       background: #9e2b25;
     }
+  }
+  .item-name,
+  .item-percentage {
+    display: inline-block;
+  }
+  .item-name {
+    float: left;
+  }
+  .item-percentage {
+    float: right;
+    font-weight: normal;
+    font-style: italic;
+    color: #f1ffe7;
   }
 `
 
@@ -180,7 +193,8 @@ class CategoriesControl extends Component {
                   percentage={Number.parseFloat(item.percentage)}
                   onClick={handleCategoriesClick}
                 >
-                  {item.name}  -  {item.percentage}%
+                  <span className="item-name">{item.name}</span>
+                  <span className="item-percentage">{item.percentage}%</span>
                 </StyledButton>
               </StyledButtonWrapper>
             </li>
