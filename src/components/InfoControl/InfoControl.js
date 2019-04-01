@@ -17,6 +17,9 @@ const StyledWrapper = styled.div`
       &.is-not-museum {
         color: #0065a2;
       }
+      &.hashtag {
+        text-transform: none;
+      }
     }
   }
   .margin-top {
@@ -49,6 +52,7 @@ class InfoControl extends Component {
       percentageNotMuseum,
       countrySelected,
       categorySelected,
+      hashtagSelectd,
     } = this.props
 
     return(
@@ -74,6 +78,11 @@ class InfoControl extends Component {
           {countrySelected &&
             <li className="margin-top">
               <strong>Country:</strong> <i>{countrySelected}</i>
+            </li>
+          }
+          { hashtagSelectd &&
+            <li className="margin-top hashtag">
+              <strong>Hashtag:</strong> <i>{hashtagSelectd}</i>
             </li>
           }
           <li className="margin-top shown-points">

@@ -164,6 +164,7 @@ class PointsLayer extends Component {
       countriesLoaded: false,
       tabIndex: 0,
       accordionIndex: "0",
+      hashtagSelectd: null,
     }
   }
 
@@ -400,18 +401,8 @@ class PointsLayer extends Component {
   }
 
   handlePointHashtagClick = (e) => {
-    console.log('POINT HASHTAG CLICK')
-    console.log(e.currentTarget.value)
-    /*
     this.countVisible = 0;
-    const { categories } = this.state;
-    const categoriesUpdated = categories.map(item => {
-      item.status = false
-
-      return item
-    })
-    this.setState({ categories: categoriesUpdated })
-    */
+    this.setState({ hashtagSelectd: e.currentTarget.value })
   }
 
   getHashtagsList = (item) => {
@@ -571,6 +562,7 @@ class PointsLayer extends Component {
       countries,
       accordionIndex,
       tabIndex,
+      hashtagSelectd,
     } = this.state;
 
     const imgStyle = {
@@ -616,7 +608,7 @@ class PointsLayer extends Component {
         )
       }
 
-      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${categorySelected}_${countrySelected}_${catKey}_${countryKey}`
+      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${categorySelected}_${countrySelected}_${catKey}_${countryKey}_${hashtagSelectd}`
 
       return (
         <Fragment>
@@ -632,6 +624,7 @@ class PointsLayer extends Component {
                 showNotMuseumPics,
                 categories,
                 countries,
+                hashtagSelectd,
               )
             )}
             pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
@@ -649,13 +642,15 @@ class PointsLayer extends Component {
                   <Panel
                     header={"#Hashtags"}
                   >
-                    {
-                      hashtag.map(
-                        (item, key) =>
-                          <StyledButton key={key} value={item} onClick={this.handlePointHashtagClick}>
-                            {item}
-                          </StyledButton>
-                      )
+                    { hashtag.length
+                      ?
+                        hashtag.map(
+                          (item, key) =>
+                            <StyledButton key={key} value={item} onClick={this.handlePointHashtagClick}>
+                              {item}
+                            </StyledButton>
+                        )
+                      : "No hashtags"
                     }
                   </Panel>
                 </StyledCollapse>
@@ -692,6 +687,7 @@ class PointsLayer extends Component {
             totalIsNotMuseum={totalIsNotMuseum}
             percentageMuseum={percentageMuseum}
             percentageNotMuseum={percentageNotMuseum}
+            hashtagSelectd={hashtagSelectd}
           />
 
           <ZoomControl position="topcenter" />
@@ -703,9 +699,17 @@ class PointsLayer extends Component {
   }
 }
 
-const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories, countries) => {
+const filterLayers = (
+  feature,
+  showMuseumPics,
+  showNotMuseumPics,
+  categories,
+  countries,
+  hashtagSelectd
+) => {
   const category = feature.properties.category
   const country = feature.properties.country
+  const hashtags = feature.properties.hashtags;
 
   let checkCountry = true;
   if (countries.length) {
@@ -759,6 +763,11 @@ const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories, co
     })
   }
 
+  let checkHashtag = true;
+  if (hashtagSelectd && !hashtags.includes(hashtagSelectd)) {
+    checkHashtag = false;
+  }
+
   if (showMuseumPics === false && showNotMuseumPics === false) {
     return false;
   }
@@ -768,16 +777,17 @@ const filterLayers = (feature, showMuseumPics, showNotMuseumPics, categories, co
     && showNotMuseumPics === true
     && checkCategory
     && checkCountry
+    && checkHashtag
   ) {
     return true;
   }
 
   const isMuseum = feature.properties.museum;
-  if (showMuseumPics === true && isMuseum === 1 && checkCategory && checkCountry) {
+  if (showMuseumPics === true && isMuseum === 1 && checkCategory && checkCountry && checkHashtag) {
     return true;
   }
 
-  if (showNotMuseumPics === true && isMuseum === 0 && checkCategory && checkCountry) {
+  if (showNotMuseumPics === true && isMuseum === 0 && checkCategory && checkCountry && checkHashtag) {
     return true;
   }
 
