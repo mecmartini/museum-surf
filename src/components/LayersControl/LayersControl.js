@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import Control from '@skyeer/react-leaflet-custom-control'
+import Collapse, { Panel } from 'rc-collapse';
+import InfoControl from '../InfoControl'
 import TabsControl from '../TabsControl'
 import { PinIcon } from '../MapMarkers'
 import { PinIconMuseum } from '../MapMarkers'
+
+import 'rc-collapse/assets/index.css';
 
 const StyledWrapper = styled.div`
   background: white;
@@ -16,6 +20,7 @@ const StyledWrapper = styled.div`
 const ButtonWrapper = styled.div`
   text-align: center;
   padding: 0 12px;
+  min-width: 392px;
 `
 
 const StyledButton = styled.button`
@@ -26,7 +31,7 @@ const StyledButton = styled.button`
   box-sizing: border-box;
   font-weight: bold;
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border-radius: 50px;
   border: 2px solid #f1ffe7;
   font-size: 12px;
@@ -70,7 +75,48 @@ const StyledButton = styled.button`
     display: inline-block;
     vertical-align: middle;
   }
+`
 
+const StyledCollapse = styled(Collapse)`
+  &.rc-collapse {
+    border: none;
+    > .rc-collapse-item {
+      border: none;
+      > .rc-collapse-header {
+        background: #17bebb;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 5px 10px;
+        border: 1px solid #f1ffe7;
+        border-radius: 6px;
+        font-size: 16px;
+        .arrow {
+          border-left-color: #ffffff;
+        }
+      }
+
+      > .rc-collapse-content {
+        padding: 0 5px;
+        > .rc-collapse-content-box {
+          margin: 5px 0;
+        }
+      }
+    }
+
+    > .rc-collapse-item-active {
+      > .rc-collapse-header {
+        background: #17bebb;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        .arrow {
+          border-top-color: #ffffff;
+          border-left-color: transparent;
+        }
+      }
+    }
+  }
 `
 
 class LayersControl extends Component {
@@ -92,10 +138,18 @@ class LayersControl extends Component {
       categorySelectedHashtags,
       countrySelected,
       countrySelectedHashtags,
+      accordionIndex,
       tabIndex,
+      handleAccordionChange,
       handleTabChange,
       handlePointCategoryClick,
-      handlePointCountryClick
+      handlePointCountryClick,
+      total,
+      count,
+      totalIsMuseum,
+      totalIsNotMuseum,
+      percentageMuseum,
+      percentageNotMuseum,
     } = this.props
 
     return(
@@ -119,24 +173,48 @@ class LayersControl extends Component {
             </StyledButton>
           </ButtonWrapper>
 
-          <TabsControl
-            tabIndex={tabIndex}
-            handleTabChange={handleTabChange}
-            categories={categories}
-            handleCategoriesClick={handleCategoriesClick}
-            handleCategoriesSelectAllClick={handleCategoriesSelectAllClick}
-            handleCategoriesDeselectAllClick={handleCategoriesDeselectAllClick}
-            countries={countries}
-            handleCountriesClick={handleCountriesClick}
-            handleCountriesSelectAllClick={handleCountriesSelectAllClick}
-            handleCountriesDeselectAllClick={handleCountriesDeselectAllClick}
-            categorySelected={categorySelected}
-            categorySelectedHashtags={categorySelectedHashtags}
-            countrySelected={countrySelected}
-            countrySelectedHashtags={countrySelectedHashtags}
-            handlePointCategoryClick={handlePointCategoryClick}
-            handlePointCountryClick={handlePointCountryClick}
-          />
+          <StyledCollapse
+            accordion={true}
+            activeKey={accordionIndex}
+            onChange={accordionIndex => handleAccordionChange(accordionIndex)}
+          >
+            <Panel
+              header={"Dataset Info"}
+            >
+              <InfoControl
+                total={total}
+                count={count}
+                totalIsMuseum={totalIsMuseum}
+                totalIsNotMuseum={totalIsNotMuseum}
+                percentageMuseum={percentageMuseum}
+                percentageNotMuseum={percentageNotMuseum}
+                categorySelected={categorySelected}
+                countrySelected={countrySelected}
+              />
+            </Panel>
+            <Panel
+              header={"Data"}
+            >
+              <TabsControl
+                tabIndex={tabIndex}
+                handleTabChange={handleTabChange}
+                categories={categories}
+                handleCategoriesClick={handleCategoriesClick}
+                handleCategoriesSelectAllClick={handleCategoriesSelectAllClick}
+                handleCategoriesDeselectAllClick={handleCategoriesDeselectAllClick}
+                countries={countries}
+                handleCountriesClick={handleCountriesClick}
+                handleCountriesSelectAllClick={handleCountriesSelectAllClick}
+                handleCountriesDeselectAllClick={handleCountriesDeselectAllClick}
+                categorySelected={categorySelected}
+                categorySelectedHashtags={categorySelectedHashtags}
+                countrySelected={countrySelected}
+                countrySelectedHashtags={countrySelectedHashtags}
+                handlePointCategoryClick={handlePointCategoryClick}
+                handlePointCountryClick={handlePointCountryClick}
+              />
+            </Panel>
+          </StyledCollapse>
         </StyledWrapper>
       </Control>
     )

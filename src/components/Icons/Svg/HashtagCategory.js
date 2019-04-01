@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const IconSvgRAW = styled.svg`
-  height: 25px;
+  height: 20px;
   width: auto;
   opacity: 1;
   fill: #17bebb;

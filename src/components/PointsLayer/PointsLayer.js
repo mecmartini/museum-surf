@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import Collapse, { Panel } from 'rc-collapse';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
-import InfoControl from '../InfoControl'
 import './src/L.Control.Center.js'
 
 import 'leaflet/dist/leaflet.css';
@@ -164,6 +163,7 @@ class PointsLayer extends Component {
       countries: [],
       countriesLoaded: false,
       tabIndex: 0,
+      accordionIndex: "0",
     }
   }
 
@@ -222,6 +222,10 @@ class PointsLayer extends Component {
     const { showNotMuseumPics } = this.state
     this.countVisible = 0;
     this.setState({ showNotMuseumPics: !showNotMuseumPics, count: 0 })
+  }
+
+  handleAccordionChange = (index) => {
+    this.setState({ accordionIndex: index })
   }
 
   handleTabChange = (index) => {
@@ -355,7 +359,7 @@ class PointsLayer extends Component {
       }
     )
 
-    this.setState({ categorySelected: cat, categories: categoriesUpdated, tabIndex: 2, categorySelectedHashtags: hashtags })
+    this.setState({ categorySelected: cat, categories: categoriesUpdated, accordionIndex: "1", tabIndex: 2, categorySelectedHashtags: hashtags })
   }
 
   handlePointCountryClick = (e) => {
@@ -392,7 +396,7 @@ class PointsLayer extends Component {
       }
     )
 
-    this.setState({ countrySelected: e.currentTarget.value, countries: countriesUpdated, tabIndex: 3, countrySelectedHashtags: hashtags })
+    this.setState({ countrySelected: e.currentTarget.value, countries: countriesUpdated, accordionIndex: "1", tabIndex: 3, countrySelectedHashtags: hashtags })
   }
 
   handlePointHashtagClick = (e) => {
@@ -565,6 +569,7 @@ class PointsLayer extends Component {
       countrySelected,
       countrySelectedHashtags,
       countries,
+      accordionIndex,
       tabIndex,
     } = this.state;
 
@@ -675,21 +680,18 @@ class PointsLayer extends Component {
             categorySelectedHashtags={categorySelectedHashtags}
             countrySelected={countrySelected}
             countrySelectedHashtags={countrySelectedHashtags}
+            accordionIndex={accordionIndex}
             tabIndex={tabIndex}
+            handleAccordionChange={this.handleAccordionChange}
             handleTabChange={this.handleTabChange}
             handlePointCategoryClick={this.handlePointCategoryClick}
             handlePointCountryClick={this.handlePointCountryClick}
-          />
-
-          <InfoControl
             total={total}
             count={count}
             totalIsMuseum={totalIsMuseum}
             totalIsNotMuseum={totalIsNotMuseum}
             percentageMuseum={percentageMuseum}
             percentageNotMuseum={percentageNotMuseum}
-            categorySelected={categorySelected}
-            countrySelected={countrySelected}
           />
 
           <ZoomControl position="topcenter" />
