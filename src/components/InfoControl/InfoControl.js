@@ -17,7 +17,7 @@ const StyledWrapper = styled.div`
       &.is-not-museum {
         color: #0065a2;
       }
-      &.hashtag {
+      &.hashtag i {
         text-transform: none;
       }
     }
@@ -40,6 +40,35 @@ const InfoTitle = styled.h2`
   border-radius: 4px 4px 0 0;
 `
 
+const StyledButton = styled.button`
+  border: none;
+  background: #ffffff;
+  color: #17bebb;
+  padding: 5px;
+  text-transform: uppercase;
+  border: 1px solid #17bebb;
+  box-sizing: border-box;
+  font-weight: bold;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  &:last-child {
+    margin-right: 0;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  i {
+    color: #9e2b25;
+  }
+  &.reset-filters {
+    background: #9e2b25;
+    color: #ffffff;
+    border-color: #9e2b25;
+    margin: 0 10px 10px;
+    float: right;
+  }
+`
+
 class InfoControl extends Component {
 
   render() {
@@ -52,7 +81,11 @@ class InfoControl extends Component {
       percentageNotMuseum,
       countrySelected,
       categorySelected,
-      hashtagSelectd,
+      hashtagSelected,
+      handleHashtagRemoveClick,
+      handleCategoryRemoveClick,
+      handleCountryRemoveClick,
+      handleResetFiltersClick,
     } = this.props
 
     return(
@@ -72,23 +105,26 @@ class InfoControl extends Component {
           </li>
           {categorySelected &&
             <li className="margin-top">
-              <strong>Category:</strong> <i>{categorySelected}</i>
+              <strong>Category:</strong> <StyledButton name={countrySelected} value={categorySelected} onClick={handleCategoryRemoveClick}>{categorySelected}  <i>x</i></StyledButton>
             </li>
           }
           {countrySelected &&
             <li className="margin-top">
-              <strong>Country:</strong> <i>{countrySelected}</i>
+              <strong>Country:</strong> <StyledButton name={countrySelected} value={countrySelected} onClick={handleCountryRemoveClick}>{countrySelected}  <i>x</i></StyledButton>
             </li>
           }
-          { hashtagSelectd &&
+          { hashtagSelected &&
             <li className="margin-top hashtag">
-              <strong>Hashtag:</strong> <i>{hashtagSelectd}</i>
+              <strong>Hashtag:</strong> <StyledButton name={hashtagSelected} value={hashtagSelected} onClick={handleHashtagRemoveClick}>{hashtagSelected}  <i>x</i></StyledButton>
             </li>
           }
           <li className="margin-top shown-points">
             <strong>Shown points:</strong> <i>{count}</i>
           </li>
         </ul>
+        {(categorySelected || countrySelected || hashtagSelected) &&
+          <StyledButton className="reset-filters" name={'Reset'} value={'reset-filters'} onClick={handleResetFiltersClick}>Reset</StyledButton>
+        }
       </StyledWrapper>
     )
   }

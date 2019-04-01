@@ -150,7 +150,11 @@ class LayersControl extends Component {
       totalIsNotMuseum,
       percentageMuseum,
       percentageNotMuseum,
-      hashtagSelectd,
+      hashtagSelected,
+      handleHashtagRemoveClick,
+      handleCategoryRemoveClick,
+      handleCountryRemoveClick,
+      handleResetFiltersClick,
     } = this.props
 
     return(
@@ -191,7 +195,11 @@ class LayersControl extends Component {
                 percentageNotMuseum={percentageNotMuseum}
                 categorySelected={categorySelected}
                 countrySelected={countrySelected}
-                hashtagSelectd={hashtagSelectd}
+                hashtagSelected={hashtagSelected}
+                handleHashtagRemoveClick={handleHashtagRemoveClick}
+                handleCategoryRemoveClick={handleCategoryRemoveClick}
+                handleCountryRemoveClick={handleCountryRemoveClick}
+                handleResetFiltersClick={handleResetFiltersClick}
               />
             </Panel>
             <Panel

@@ -164,7 +164,7 @@ class PointsLayer extends Component {
       countriesLoaded: false,
       tabIndex: 0,
       accordionIndex: "0",
-      hashtagSelectd: null,
+      hashtagSelected: null,
     }
   }
 
@@ -363,6 +363,18 @@ class PointsLayer extends Component {
     this.setState({ categorySelected: cat, categories: categoriesUpdated, accordionIndex: "1", tabIndex: 2, categorySelectedHashtags: hashtags })
   }
 
+  handleCategoryRemoveClick = (e) => {
+    this.countVisible = 0;
+    const { categories } = this.state;
+    const categoriesUpdated = categories.map(item => {
+      item.status = true;
+
+      return item
+    })
+
+    this.setState({ categorySelected: null, categories: categoriesUpdated, categorySelectedHashtags: null })
+  }
+
   handlePointCountryClick = (e) => {
     const country = e.currentTarget.value;
 
@@ -400,9 +412,50 @@ class PointsLayer extends Component {
     this.setState({ countrySelected: e.currentTarget.value, countries: countriesUpdated, accordionIndex: "1", tabIndex: 3, countrySelectedHashtags: hashtags })
   }
 
+  handleCountryRemoveClick = (e) => {
+    this.countVisible = 0;
+    const { countries } = this.state;
+    const countriesUpdated = countries.map(item => {
+      item.status = true;
+
+      return item
+    })
+
+    this.setState({ countrySelected: null, countries: countriesUpdated, countrySelectedHashtags: null })
+  }
+
   handlePointHashtagClick = (e) => {
     this.countVisible = 0;
-    this.setState({ hashtagSelectd: e.currentTarget.value })
+    this.setState({ hashtagSelected: e.currentTarget.value })
+  }
+
+  handleHashtagRemoveClick = (e) => {
+    this.countVisible = 0;
+    this.setState({ hashtagSelected: null })
+  }
+
+  handleResetFiltersClick = (e) => {
+    this.countVisible = 0;
+
+    const { categories } = this.state;
+    const categoriesUpdated = categories.map(item => {
+      item.status = true;
+
+      return item
+    })
+
+    const { countries } = this.state;
+    const countriesUpdated = countries.map(item => {
+      item.status = true;
+
+      return item
+    })
+
+    this.setState({
+      categorySelected: null, categories: categoriesUpdated, categorySelectedHashtags: null,
+      countrySelected: null, countries: countriesUpdated, countrySelectedHashtags: null,
+      hashtagSelected: null
+    })
   }
 
   getHashtagsList = (item) => {
@@ -562,7 +615,7 @@ class PointsLayer extends Component {
       countries,
       accordionIndex,
       tabIndex,
-      hashtagSelectd,
+      hashtagSelected,
     } = this.state;
 
     const imgStyle = {
@@ -608,7 +661,7 @@ class PointsLayer extends Component {
         )
       }
 
-      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${categorySelected}_${countrySelected}_${catKey}_${countryKey}_${hashtagSelectd}`
+      const layerKey = `points_layer_${showMuseumPics}_${showNotMuseumPics}_${categorySelected}_${countrySelected}_${catKey}_${countryKey}_${hashtagSelected}`
 
       return (
         <Fragment>
@@ -624,7 +677,7 @@ class PointsLayer extends Component {
                 showNotMuseumPics,
                 categories,
                 countries,
-                hashtagSelectd,
+                hashtagSelected,
               )
             )}
             pointToLayer={(feature, latlng) => (pointDraw(feature, latlng))}
@@ -687,7 +740,11 @@ class PointsLayer extends Component {
             totalIsNotMuseum={totalIsNotMuseum}
             percentageMuseum={percentageMuseum}
             percentageNotMuseum={percentageNotMuseum}
-            hashtagSelectd={hashtagSelectd}
+            hashtagSelected={hashtagSelected}
+            handleHashtagRemoveClick={this.handleHashtagRemoveClick}
+            handleCategoryRemoveClick={this.handleCategoryRemoveClick}
+            handleCountryRemoveClick={this.handleCountryRemoveClick}
+            handleResetFiltersClick={this.handleResetFiltersClick}
           />
 
           <ZoomControl position="topcenter" />
@@ -705,7 +762,7 @@ const filterLayers = (
   showNotMuseumPics,
   categories,
   countries,
-  hashtagSelectd
+  hashtagSelected
 ) => {
   const category = feature.properties.category
   const country = feature.properties.country
@@ -764,7 +821,7 @@ const filterLayers = (
   }
 
   let checkHashtag = true;
-  if (hashtagSelectd && !hashtags.includes(hashtagSelectd)) {
+  if (hashtagSelected && !hashtags.includes(hashtagSelected)) {
     checkHashtag = false;
   }
 
