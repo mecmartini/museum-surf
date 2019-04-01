@@ -98,6 +98,7 @@ const StyledButton = styled.button`
     font-weight: normal;
     font-style: italic;
     color: #f1ffe7;
+    padding: 0 10px;
   }
 `
 
