@@ -8,13 +8,14 @@ import { PinIconMuseum } from '../MapMarkers'
 const StyledWrapper = styled.div`
   background: white;
   border: 1px solid #f1ffe7;
-  padding: 10px;
+  padding: 0;
   box-shadow: 0px 0px 10px 0px rgba(112,183,126,1);
-  border-radius: 4px;
+  border-radius: 8px;
 `
 
 const ButtonWrapper = styled.div`
   text-align: center;
+  padding: 0 12px;
 `
 
 const StyledButton = styled.button`
@@ -92,7 +93,9 @@ class LayersControl extends Component {
       countrySelected,
       countrySelectedHashtags,
       tabIndex,
-      handleTabChange
+      handleTabChange,
+      handlePointCategoryClick,
+      handlePointCountryClick
     } = this.props
 
     return(
@@ -131,6 +134,8 @@ class LayersControl extends Component {
             categorySelectedHashtags={categorySelectedHashtags}
             countrySelected={countrySelected}
             countrySelectedHashtags={countrySelectedHashtags}
+            handlePointCategoryClick={handlePointCategoryClick}
+            handlePointCountryClick={handlePointCountryClick}
           />
         </StyledWrapper>
       </Control>

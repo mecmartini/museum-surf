@@ -5,7 +5,7 @@ const IconSvgRAW = styled.svg`
   height: 25px;
   width: auto;
   opacity: 1;
-  fill: #0065a2;
+  fill: #17bebb;
 `
 
 const IconSvgPin = () => (

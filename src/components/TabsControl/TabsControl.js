@@ -25,14 +25,11 @@ const StyledWrapper = styled.div`
     li {
       text-transform: uppercase;
       color: #0065a2;
-      background: #f1ffe7;
-      border: 1px solid #f1ffe7:
-      font-size: 14px;
+      background: transparent;
+      border: 1px solid #17bebb;
+      border-radius: 5px 5px 0 0;
       &.react-tabs__tab--selected {
-        background: #0065a2;
-        color: #f1ffe7;
-        border: 1px solid #0065a2;
-        font-weight: bold;
+        background: #17bebb;
         svg {
           fill: #ffffff;
         }
@@ -41,18 +38,16 @@ const StyledWrapper = styled.div`
   }
   .react-tabs__tab-panel {
     padding: 0 15px 10px;
-    border: 2px solid #0065a2;
+    border: 2px solid #17bebb;
     border-radius: 8px;
-    margin-top: 1px;
-    background: #f1ffe7;
+    background: #17bebb;
   }
 `
 
 const TabTitle = styled.h4`
-  color: #0065a2;
+  color: #ffffff;
   text-transform: uppercase;
   text-align: center;
-  background: #f1ffe7;
   padding: 10px 5px;
   margin: 0;
 `
@@ -74,6 +69,8 @@ class TabsControl extends Component {
       countrySelectedHashtags,
       tabIndex,
       handleTabChange,
+      handlePointCategoryClick,
+      handlePointCountryClick
     } = this.props
 
     return(
@@ -93,6 +90,7 @@ class TabsControl extends Component {
               handleCategoriesClick={handleCategoriesClick}
               handleCategoriesSelectAllClick={handleCategoriesSelectAllClick}
               handleCategoriesDeselectAllClick={handleCategoriesDeselectAllClick}
+              handlePointCategoryClick={handlePointCategoryClick}
             />
           </TabPanel>
           <TabPanel>
@@ -102,6 +100,7 @@ class TabsControl extends Component {
               handleCountriesClick={handleCountriesClick}
               handleCountriesSelectAllClick={handleCountriesSelectAllClick}
               handleCountriesDeselectAllClick={handleCountriesDeselectAllClick}
+              handlePointCountryClick={handlePointCountryClick}
             />
           </TabPanel>
           <TabPanel>

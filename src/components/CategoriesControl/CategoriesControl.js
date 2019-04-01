@@ -1,25 +1,32 @@
 import React, { Component, Fragment } from 'react'
 import L from 'leaflet';
 import styled from 'styled-components'
+import { IconSvgPie } from '../Icons'
 
 const StyledList = styled.ul`
   list-style: none outside none;
   padding: 0;
   margin: 0;
   max-height: calc(100vh - 202px);
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   li {
     margin: 0 0 5px;
-    background: #0065a2;
     opacity: .8;
     &:last-child {
       margin-bottom: 0;
     }
     &.active {
-      background: #0065a2;
       opacity: 1;
     }
   }
+`
+
+const StyledButtonWrapper = styled.span`
+  width: calc(100% - 25px);
+  background: #434348;
+  display: inline-block;
+  vertical-align: middle;
 `
 
 const StyledButton = styled.button`
@@ -81,6 +88,19 @@ const StyledButton = styled.button`
   }
 `
 
+const PieButton = styled.button`
+  border: none;
+  background: transparent;
+  width: 25px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0;
+  &:hover {
+    cursor: pointer;
+  }
+`
+
 class CategoriesControl extends Component {
 
   componentDidMount() {
@@ -95,6 +115,7 @@ class CategoriesControl extends Component {
       handleCategoriesClick,
       handleCategoriesSelectAllClick,
       handleCategoriesDeselectAllClick,
+      handlePointCategoryClick,
     } = this.props
 
     let allCategoriesActive = true;
@@ -141,17 +162,27 @@ class CategoriesControl extends Component {
         <StyledList id="categories-list">
           {categories.map((item, k) => (
             <li key={k} className={item.status ? 'active' : ''}>
-              <StyledButton
-                className={item.status ? 'active' : ''}
-                value={item.name}
+              <PieButton
                 name={item.name}
-                title={item.name + '  -  ' + item.percentage + '%'}
-                percentage={Number.parseFloat(item.percentage)}
-                onClick={handleCategoriesClick}
+                value={item.name}
+                title={item.name}
+                onClick={handlePointCategoryClick}
               >
-                {item.name}  -  {item.percentage}%
-              </StyledButton>
+                <IconSvgPie/>
+              </PieButton>
 
+              <StyledButtonWrapper>
+                <StyledButton
+                  className={item.status ? 'active' : ''}
+                  value={item.name}
+                  name={item.name}
+                  title={item.name + '  -  ' + item.percentage + '%'}
+                  percentage={Number.parseFloat(item.percentage)}
+                  onClick={handleCategoriesClick}
+                >
+                  {item.name}  -  {item.percentage}%
+                </StyledButton>
+              </StyledButtonWrapper>
             </li>
           ))}
         </StyledList>

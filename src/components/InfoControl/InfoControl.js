@@ -7,12 +7,12 @@ const dataReference = "1092";
 const StyledWrapper = styled.div`
   background: #ffffff;
   border: 1px solid #f1ffe7;
-  padding: 10px;
+  padding: 0;
   box-shadow: 0px 0px 10px 0px rgba(112,183,126,1);
-  border-radius: 4px;
+  border-radius: 8px;
   ul {
+    padding: 0 10px;
     list-style: none outside none;
-    padding: 0;
     li {
       text-transform: uppercase;
       color: #434348;
@@ -36,10 +36,11 @@ const StyledWrapper = styled.div`
 const InfoTitle = styled.h2`
   text-transform: uppercase;
   margin-top: 0;
-  background: #f1ffe7;
-  color: #0065a2;
+  background: #17bebb;
+  color: #ffffff;
   padding: 10px 0;
   text-align: center;
+  border-radius: 4px 4px 0 0;
 `
 
 class InfoControl extends Component {

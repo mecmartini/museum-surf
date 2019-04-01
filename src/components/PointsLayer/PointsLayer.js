@@ -230,7 +230,7 @@ class PointsLayer extends Component {
 
   handleCategoriesClick = (e) => {
     this.countVisible = 0;
-    const value = e.target.value;
+    const value = e.currentTarget.value;
     const { categories } = this.state;
     const categoriesUpdated = categories.map(item => {
       if (item.name === value) {
@@ -265,7 +265,7 @@ class PointsLayer extends Component {
 
   handleCountriesClick = (e) => {
     this.countVisible = 0;
-    const value = e.target.value;
+    const value = e.currentTarget.value;
     const { countries } = this.state;
     const countriesUpdated = countries.map(item => {
       if (item.name === value) {
@@ -322,7 +322,7 @@ class PointsLayer extends Component {
   }
 
   handlePointCategoryClick = (e) => {
-    const cat = e.target.value;
+    const cat = e.currentTarget.value;
 
     this.countVisible = 0;
     const { categories } = this.state;
@@ -359,7 +359,7 @@ class PointsLayer extends Component {
   }
 
   handlePointCountryClick = (e) => {
-    const country = e.target.value;
+    const country = e.currentTarget.value;
 
     this.countVisible = 0;
     const { countries } = this.state;
@@ -392,12 +392,12 @@ class PointsLayer extends Component {
       }
     )
 
-    this.setState({ countrySelected: e.target.value, countries: countriesUpdated, tabIndex: 3, countrySelectedHashtags: hashtags })
+    this.setState({ countrySelected: e.currentTarget.value, countries: countriesUpdated, tabIndex: 3, countrySelectedHashtags: hashtags })
   }
 
   handlePointHashtagClick = (e) => {
     console.log('POINT HASHTAG CLICK')
-    console.log(e.target.value)
+    console.log(e.currentTarget.value)
     /*
     this.countVisible = 0;
     const { categories } = this.state;
@@ -677,6 +677,8 @@ class PointsLayer extends Component {
             countrySelectedHashtags={countrySelectedHashtags}
             tabIndex={tabIndex}
             handleTabChange={this.handleTabChange}
+            handlePointCategoryClick={this.handlePointCategoryClick}
+            handlePointCountryClick={this.handlePointCountryClick}
           />
 
           <InfoControl

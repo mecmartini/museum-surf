@@ -8,7 +8,7 @@ import styled from 'styled-components'
 const EmptyLabel = styled.div`
   text-transform: uppercase;
   font-size: 14px;
-  color: #0065a2;
+  color: #ffffff;
   font-style: italic;
   text-align: center;
 `
