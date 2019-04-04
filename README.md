@@ -1,6 +1,10 @@
 # Museum Surf
 
-Mapping Instagram users' museum experience: “place-making” practices through visual storytelling.
+![Museum Surf](https://raw.githubusercontent.com/mecmartini/museum-surf/master/public/assets/logo-museum-surf.png?token=ACqlukG5PStFuUZL80uvtaL2A0In3k1mks5crxakwA%3D%3D "Museum Surf")
+
+Mapping Instagram users museum experience: “place-making” practices through visual storytelling.
+
+*International Congress “The Epoch of Space” – Santiago de Compostela*
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
