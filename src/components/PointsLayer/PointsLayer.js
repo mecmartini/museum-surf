@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import Collapse, { Panel } from 'rc-collapse';
 import { MapPinIcon, MapPinIconMuseum} from '../MapMarkers';
 import LayersControl from '../LayersControl'
+import LogoControl from '../LogoControl'
 import './src/L.Control.Center.js'
 
 import 'leaflet/dist/leaflet.css';
@@ -749,6 +750,8 @@ class PointsLayer extends Component {
             handleCountryRemoveClick={this.handleCountryRemoveClick}
             handleResetFiltersClick={this.handleResetFiltersClick}
           />
+
+          <LogoControl />
 
           <ZoomControl position="topcenter" />
         </Fragment>
