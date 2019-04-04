@@ -1,3 +1,7 @@
+# Museum Surf
+
+Mapping Instagram users' museum experience: “place-making” practices through visual storytelling.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
