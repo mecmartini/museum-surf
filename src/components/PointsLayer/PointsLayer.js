@@ -13,6 +13,8 @@ import 'leaflet/dist/leaflet.css';
 import 'rc-collapse/assets/index.css';
 import './point-layers.min.css';
 
+const imgPath = './assets/images/';
+
 const StyledButton = styled.button`
   border: none;
   background: #17bebb;
@@ -305,8 +307,9 @@ class PointsLayer extends Component {
 
   handleClick = (e) => {
     const featureProps = e.sourceTarget.feature.properties;
+    console.log(featureProps)
     this.setState({
-      image: featureProps.image,
+      image: (featureProps.file === false ? featureProps.image : imgPath + featureProps.file),
       location: featureProps.location,
       hashtag: featureProps.hashtags,
       country: featureProps.country,
